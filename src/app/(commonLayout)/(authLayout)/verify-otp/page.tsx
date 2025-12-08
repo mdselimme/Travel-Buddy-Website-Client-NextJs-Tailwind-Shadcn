@@ -1,7 +1,6 @@
-import { ResetPasswordForm } from "@/components/modules/Authentication/ResetPasswordFrom";
-import React from "react";
+import { VerifyOtpForm } from "@/components/modules/Authentication/VerifyOtpForm";
 
-const ResetPasswordPage = async ({
+const VerifyOtpPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -12,10 +11,10 @@ const ResetPasswordPage = async ({
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-8 md:p-10">
       <div className="w-full max-w-lg">
-        <ResetPasswordForm params={params} />
+        <VerifyOtpForm />
       </div>
     </div>
   );
 };
 
-export default ResetPasswordPage;
+export default VerifyOtpPage;

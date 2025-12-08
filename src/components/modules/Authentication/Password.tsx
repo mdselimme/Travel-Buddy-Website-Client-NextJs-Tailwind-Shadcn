@@ -11,7 +11,7 @@ const Password = ({ ...field }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <div className="w-full max-w-xs space-y-2">
+    <div className="w-full space-y-2">
       <div className="relative">
         <Input
           type={isVisible ? "text" : "password"}

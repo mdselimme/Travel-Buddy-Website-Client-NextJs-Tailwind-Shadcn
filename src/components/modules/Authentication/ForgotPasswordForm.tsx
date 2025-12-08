@@ -86,7 +86,7 @@ export function ForgotPasswordForm({
               )}
             />
             <Button type="submit" className="w-full text-white rounded-full">
-              Send OTP
+              Send Reset Link
             </Button>
           </form>
         </Form>
