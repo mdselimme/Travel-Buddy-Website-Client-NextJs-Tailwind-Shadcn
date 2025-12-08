@@ -1,9 +1,9 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Menu, X, LogIn, UserRoundPlus } from "lucide-react";
-import Link from "next/link";
 import { Button } from "../ui/button";
 import WebLogo from "@/assets/icons/WebLogo";
+import Link from "next/link";
 
 const PublicHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -112,14 +112,18 @@ const PublicHeader = () => {
                 </a>
               ))}
               <div className="pt-4 mt-2 border-t border-gray-200 dark:border-gray-700 flex flex-col space-y-2">
-                <Button variant="outline">
-                  <Link href={"/register"}>Register</Link>
-                  <UserRoundPlus />
-                </Button>
-                <Button className="text-white">
-                  <Link href={"/login"}>Login</Link>
-                  <LogIn />
-                </Button>
+                <Link href={"/register"}>
+                  Register
+                  <Button variant="outline">
+                    <UserRoundPlus />
+                  </Button>
+                </Link>
+                <Link href={"/login"}>
+                  <Button className="text-white inline-block">
+                    Login
+                    <LogIn />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
