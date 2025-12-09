@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,9 @@ import Password from "./Password";
 import WebLogo from "@/assets/icons/WebLogo";
 import Link from "next/link";
 import { IResetPasswordInput } from "@/types/auth.types";
+import { toast } from "sonner";
+import { resetPasswordAction } from "@/actions/auth/forgotPassword";
+import { useRouter } from "next/navigation";
 
 const resetPasswordSchema = z
   .object({
@@ -58,6 +62,7 @@ export function ResetPasswordForm({
 }: React.ComponentProps<typeof Card> & {
   params: { [key: string]: string | string[] | undefined };
 }) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof resetPasswordSchema>>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
@@ -71,7 +76,13 @@ export function ResetPasswordForm({
       password: data.password,
       token: params?.token as string,
     };
-    console.log("otp value", resetData);
+    try {
+      const result = await resetPasswordAction(resetData);
+      router.push("/login");
+      toast.success(result.message || "Password has been reset successfully.");
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to reset password.");
+    }
   }
   return (
     <Card {...props}>

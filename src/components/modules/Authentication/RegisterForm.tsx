@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,9 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Password from "./Password";
+import { registerUser } from "@/actions/user/registerUser";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const registerSchema = z
   .object({
@@ -55,17 +59,33 @@ export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       fullName: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof registerSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof registerSchema>) => {
+    try {
+      const userData = {
+        fullName: data.fullName,
+        email: data.email,
+        password: data.password,
+      };
+      const result = await registerUser(userData);
+      if (result.success) {
+        router.push("/login");
+        toast.success(result.message || "Registration successful");
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error.message || "Failed to register user");
+    }
   };
 
   return (

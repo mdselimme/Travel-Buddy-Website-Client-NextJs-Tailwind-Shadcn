@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+import { forgotPasswordEmailSend } from "@/actions/auth/forgotPassword";
 import WebLogo from "@/assets/icons/WebLogo";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +24,9 @@ import { Input } from "@/components/ui/input";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const emailSchema = z.object({
@@ -34,6 +38,7 @@ const emailSchema = z.object({
 export function ForgotPasswordForm({
   ...props
 }: React.ComponentProps<typeof Card>) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof emailSchema>>({
     resolver: zodResolver(emailSchema),
     defaultValues: {
@@ -41,8 +46,14 @@ export function ForgotPasswordForm({
     },
   });
 
-  const onSubmit = (data: z.infer<typeof emailSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof emailSchema>) => {
+    try {
+      const result = await forgotPasswordEmailSend(data.email);
+      router.push("/login");
+      toast.success(result.message || "Reset link sent to your email.");
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to send reset link.");
+    }
   };
 
   return (

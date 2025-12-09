@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,9 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Password from "./Password";
+import { authLogIn } from "@/actions/auth/login";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const logInSchema = z.object({
   email: z.email({ error: "Email is required." }).min(2, {
@@ -30,6 +34,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof logInSchema>>({
     resolver: zodResolver(logInSchema),
     defaultValues: {
@@ -37,11 +42,24 @@ export function LoginForm({
       password: "",
     },
   });
+  const onSubmit = async (data: z.infer<typeof logInSchema>) => {
+    try {
+      const result = await authLogIn(data);
 
-  const onSubmit = (data: z.infer<typeof logInSchema>) => {
-    console.log(data);
+      toast.success(result.message || "Logged in successfully.");
+      router.push("/");
+    } catch (error: any) {
+      const msg = error?.message || "Something went wrong. Please try again.";
+
+      // Custom redirection
+      if (msg.includes("not verified")) {
+        router.push(`/verify-email?email=${data.email}`);
+        return;
+      }
+
+      toast.error(msg);
+    }
   };
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">

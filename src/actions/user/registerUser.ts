@@ -1,0 +1,21 @@
+"use server";
+
+import { IRegisterInput } from "@/types/user.types";
+
+
+export const registerUser = async (userData: IRegisterInput) => {
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+    });
+    const data = await response.json();
+
+    if (!response.ok || data.success === false) {
+        throw new Error(data.message || "Failed to register user.");
+    }
+    return data;
+};
