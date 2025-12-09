@@ -45,7 +45,6 @@ export function LoginForm({
   const onSubmit = async (data: z.infer<typeof logInSchema>) => {
     try {
       const result = await authLogIn(data);
-
       toast.success(result.message || "Logged in successfully.");
       router.push("/");
     } catch (error: any) {
