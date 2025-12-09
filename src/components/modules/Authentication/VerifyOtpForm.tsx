@@ -1,4 +1,5 @@
 "use client";
+import WebLogo from "@/assets/icons/WebLogo";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,8 +25,10 @@ import {
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dot } from "lucide-react";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import z from "zod";
 
 const optSchema = z.object({
@@ -34,8 +37,14 @@ const optSchema = z.object({
   }),
 });
 
-export function VerifyOtpForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const [confirmed, setConfirmed] = useState(false);
+export function VerifyOtpForm({
+  email,
+  ...props
+}: React.ComponentProps<typeof Card> & {
+  email: string;
+}) {
+  const [confirmed, setConfirmed] = useState(true);
+
   const [timer, setTimer] = useState(10);
   const form = useForm<z.infer<typeof optSchema>>({
     resolver: zodResolver(optSchema),
@@ -43,17 +52,53 @@ export function VerifyOtpForm({ ...props }: React.ComponentProps<typeof Card>) {
       pin: "",
     },
   });
+  // Send Otp in email function
+  const handleSendOtp = async () => {
+    const toastId = toast.loading("Sending Otp.");
+    try {
+      // const res = await sendOtp({ email }).unwrap();
+      // if (res.success) {
+      //   toast.success("Otp Sent Successfully. ", { id: toastId });
+      //   setConfirmed(true);
+      // }
+      setConfirmed(true);
+      setTimer(10);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // Submit otp function
   async function onSubmit(data: z.infer<typeof optSchema>) {
-    console.log("otp value", data);
+    console.log("otp value", {
+      email,
+      otp: data.pin,
+    });
   }
+
+  useEffect(() => {
+    if (!email && !confirmed) {
+      return;
+    }
+    const timerId = setInterval(() => {
+      if (confirmed) {
+        setTimer((prev) => (prev > 0 ? prev - 1 : 0));
+      }
+    }, 1000);
+    return () => clearInterval(timerId);
+  }, [email, confirmed]);
   return (
     <Card {...props}>
       <CardHeader className="text-center">
+        <div className="flex flex-col items-center">
+          <Link href="/">
+            <WebLogo />
+          </Link>
+        </div>
         <CardTitle className="text-xl">Enter verification code</CardTitle>
         <CardDescription>We sent a 6-digit code to your email.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="text-center mx-auto">
         <Form {...form}>
           <form
             id="otp-form"
@@ -65,7 +110,9 @@ export function VerifyOtpForm({ ...props }: React.ComponentProps<typeof Card>) {
               name="pin"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="mb-2">Enter your Otp Here</FormLabel>
+                  <FormLabel className="mb-2 text-center">
+                    Enter your Otp Here
+                  </FormLabel>
                   <FormControl>
                     <InputOTP maxLength={6} {...field}>
                       <InputOTPGroup>
@@ -92,7 +139,7 @@ export function VerifyOtpForm({ ...props }: React.ComponentProps<typeof Card>) {
                   <FormDescription>
                     {timer} seconds
                     <Button
-                      //   onClick={handleSendOtp}
+                      onClick={handleSendOtp}
                       variant={"link"}
                       type="submit"
                       disabled={timer !== 0}

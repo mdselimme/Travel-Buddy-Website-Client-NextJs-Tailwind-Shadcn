@@ -9,6 +9,7 @@ const WebLogo = () => {
         src={webLogo}
         alt="Web Logo"
         fill={true}
+        loading="eager"
         quality={100}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 200px"
       />
