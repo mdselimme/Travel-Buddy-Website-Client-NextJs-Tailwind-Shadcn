@@ -4,7 +4,13 @@ import Link from "next/link";
 import LogInImage from "@/assets/images/login-image.png";
 import Image from "next/image";
 
-export default function LoginPage() {
+export default function LoginPage({
+  searchParams,
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined };
+}) {
+  const redirectTo = searchParams?.redirectTo || "/dashboard";
+
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="bg-muted relative hidden lg:block">
@@ -31,7 +37,7 @@ export default function LoginPage() {
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             <div>
-              <LoginForm />
+              <LoginForm redirectTo={redirectTo as string} />
             </div>
           </div>
         </div>

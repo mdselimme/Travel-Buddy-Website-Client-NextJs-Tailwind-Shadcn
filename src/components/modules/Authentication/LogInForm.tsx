@@ -20,6 +20,7 @@ import Password from "./Password";
 import { authLogIn } from "@/actions/auth/login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { isValidRedirectForRole } from "@/lib/authRouteUtils";
 
 const logInSchema = z.object({
   email: z.email({ error: "Email is required." }).min(2, {
@@ -31,9 +32,10 @@ const logInSchema = z.object({
 });
 
 export function LoginForm({
+  redirectTo,
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: React.ComponentProps<"div"> & { redirectTo: string }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof logInSchema>>({
     resolver: zodResolver(logInSchema),
@@ -43,10 +45,19 @@ export function LoginForm({
     },
   });
   const onSubmit = async (data: z.infer<typeof logInSchema>) => {
+    const logInData = { ...data, redirectTo };
     try {
-      const result = await authLogIn(data);
+      const result = await authLogIn(logInData);
       toast.success(result.message || "Logged in successfully.");
-      router.push("/");
+      if (redirectTo && !result?.data?.isProfileCompleted) {
+        if (isValidRedirectForRole(redirectTo, result.role)) {
+          const requestedPath = redirectTo.toString();
+          router.push(`/my-profile?redirectTo=${requestedPath}`);
+        } else {
+          router.push("/my-profile");
+        }
+      }
+      router.push(redirectTo);
     } catch (error: any) {
       const msg = error?.message || "Something went wrong. Please try again.";
 

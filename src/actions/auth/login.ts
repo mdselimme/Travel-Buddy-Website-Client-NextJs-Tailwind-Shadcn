@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 import { setCookie } from "@/lib/tokenHandlers";
-import { IAuthLogin } from "@/types/auth.types";
+import { IAuthLogin, IJwtPayload, UserRole } from "@/types/auth.types";
 import { parse } from "cookie";
-
+import jwt from "jsonwebtoken";
 
 
 export const authLogIn = async (credentials: IAuthLogin) => {
@@ -51,13 +51,10 @@ export const authLogIn = async (credentials: IAuthLogin) => {
         throw new Error("Tokens not found in cookies");
     }
 
-    console.log({ accessTokenObject, refreshTokenObject })
-
-
     await setCookie("accessToken", accessTokenObject.accessToken, {
         secure: true,
         httpOnly: true,
-        maxAge: parseInt(accessTokenObject['Max-Age']),
+        maxAge: parseInt(accessTokenObject['Max-Age']) || 1000 * 60 * 60 * 24 * 1,
         path: accessTokenObject.Path || "/",
         sameSite: accessTokenObject['SameSite'] || "none",
     });
@@ -65,11 +62,22 @@ export const authLogIn = async (credentials: IAuthLogin) => {
     await setCookie("refreshToken", refreshTokenObject.refreshToken, {
         secure: true,
         httpOnly: true,
-        maxAge: parseInt(refreshTokenObject['Max-Age']),
+        maxAge: parseInt(refreshTokenObject['Max-Age']) || 1000 * 60 * 60 * 24 * 30,
         path: refreshTokenObject.Path || "/",
         sameSite: refreshTokenObject['SameSite'] || "none",
     });
 
+    const decodedAccessToken = jwt.verify(
+        accessTokenObject.accessToken,
+        process.env.JWT_ACCESS_TOKEN_SECRET as string
+    ) as IJwtPayload;
 
-    return data;
+    const userRole: UserRole = decodedAccessToken.role;
+
+    return {
+        message: data.message || "Login successful",
+        success: true,
+        data: data.data || null,
+        role: userRole
+    };
 };
