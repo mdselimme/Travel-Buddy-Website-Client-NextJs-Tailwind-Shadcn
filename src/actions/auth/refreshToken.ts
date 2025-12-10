@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverFetch } from "@/lib/serverFetch";
 import { deleteCookie, getCookie, setCookie } from "@/lib/tokenHandlers";
-import { verifyAccessToken } from "@/lib/tokenHanlder";
+import { verifyAccessToken } from "@/lib/verifyAccessToken";
 import { parse } from "cookie";
 
 export const getNewAccessToken = async () => {

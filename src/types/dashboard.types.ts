@@ -9,6 +9,7 @@ export interface NavItem {
     icon: string;
     badgeCount?: number | string;
     roles?: UserRole[];
+    isActive?: boolean;
 }
 
 export interface NavSection {

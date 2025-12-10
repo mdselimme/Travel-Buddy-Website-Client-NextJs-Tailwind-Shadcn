@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverFetch } from "@/lib/serverFetch";
 import { getCookie } from "@/lib/tokenHandlers";
-import { verifyAccessToken } from "@/lib/tokenHanlder";
 import { IUser } from "@/types/user.types";
-import { cache } from "react";
+
 
 
 export const getUserInfo = async (): Promise<IUser | null> => {
-    let userInfo: Partial<IUser> | null;
+
     try {
         const response = await serverFetch.get("/user/me", {
             cache: "force-cache",
@@ -20,12 +20,10 @@ export const getUserInfo = async (): Promise<IUser | null> => {
             if (!accessToken) {
                 throw new Error("No access token found");
             }
+        };
 
-            const verifiedToken = await verifyAccessToken(accessToken);
-
-        }
-
+        return result.data as IUser;
     } catch (error: any) {
-        return null;
+        throw new Error(error.message);
     }
 };
