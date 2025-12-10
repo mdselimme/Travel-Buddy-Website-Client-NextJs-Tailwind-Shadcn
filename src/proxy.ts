@@ -46,8 +46,6 @@ export async function proxy(request: NextRequest) {
 
     const isAuth = isAuthRoute(pathname);
 
-    console.log({ routeOwner, isAuth, pathname, })
-
     if (isAuth && accessToken) {
         return NextResponse.redirect(
             new URL(getDefaultDashboardRoute(userRole as UserRole),
@@ -56,10 +54,24 @@ export async function proxy(request: NextRequest) {
     };
 
     if (routeOwner === "COMMON") {
+        if (!accessToken) {
+            const logInUrl = new URL("/login", request.url);
+            logInUrl.searchParams.set("redirect", pathname);
+            return NextResponse.redirect(logInUrl);
+        }
         return NextResponse.next();
     }
 
     if (routeOwner === "ADMIN" || routeOwner === "SUPER_ADMIN" || routeOwner === "USER") {
+        if (!accessToken) {
+            const logInUrl = new URL("/login", request.url);
+            logInUrl.searchParams.set("redirect", pathname);
+            return NextResponse.redirect(logInUrl);
+        }
+
+        if (routeOwner === "ADMIN" && (userRole === "ADMIN" || userRole === "SUPER_ADMIN")) {
+            return NextResponse.next();
+        }
         if (userRole !== routeOwner) {
             return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
         }
@@ -91,8 +103,6 @@ export async function proxy(request: NextRequest) {
         // SCENARIO 2: Profile IS Completed
         // We simply allow navigation. We deleted the block that redirected 
         // /my-profile to the dashboard.
-
-        // (Optional) You might still want to redirect the homepage "/" to the dashboard
 
         if (pathname === "/") {
             return NextResponse.redirect(new URL(getDefaultDashboardRoute(userInfo.role), request.url));

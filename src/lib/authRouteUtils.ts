@@ -46,9 +46,6 @@ export const isRoutesMatches = (pathname: string, routeConfig: RouteConfig): boo
 
 export const getRouteOwner = (pathname: string): "ADMIN" | "USER" | "SUPER_ADMIN" | "COMMON" | null => {
     if (isRoutesMatches(pathname, adminProtectedRoutes)) {
-        return "SUPER_ADMIN";
-    }
-    if (isRoutesMatches(pathname, adminProtectedRoutes)) {
         return "ADMIN";
     }
     if (isRoutesMatches(pathname, userProtectedRoutes)) {
@@ -79,6 +76,10 @@ export const isValidRedirectForRole = (redirectPath: string, role: UserRole): bo
     const routeOwner = getRouteOwner(redirectPath);
 
     if (routeOwner === null || routeOwner === "COMMON") {
+        return true;
+    }
+
+    if (routeOwner === "ADMIN" && (role === "ADMIN" || role === "SUPER_ADMIN")) {
         return true;
     }
 
