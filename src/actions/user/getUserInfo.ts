@@ -2,6 +2,7 @@
 import { serverFetch } from "@/lib/serverFetch";
 import { getCookie } from "@/lib/tokenHandlers";
 import { IUser } from "@/types/user.types";
+import { redirect } from "next/navigation";
 
 
 
@@ -24,6 +25,10 @@ export const getUserInfo = async (): Promise<IUser | null> => {
 
         return result.data as IUser;
     } catch (error: any) {
-        throw new Error(error.message);
+        const msg = error?.message || "Failed to fetch user info.";
+        if (msg.includes("No access token")) {
+            redirect("/login");
+        }
+        return null;
     }
 };

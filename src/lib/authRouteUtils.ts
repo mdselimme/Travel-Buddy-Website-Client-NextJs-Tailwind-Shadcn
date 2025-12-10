@@ -46,10 +46,10 @@ export const isRoutesMatches = (pathname: string, routeConfig: RouteConfig): boo
 
 export const getRouteOwner = (pathname: string): "ADMIN" | "USER" | "SUPER_ADMIN" | "COMMON" | null => {
     if (isRoutesMatches(pathname, adminProtectedRoutes)) {
-        return "ADMIN";
+        return "SUPER_ADMIN";
     }
     if (isRoutesMatches(pathname, adminProtectedRoutes)) {
-        return "SUPER_ADMIN";
+        return "ADMIN";
     }
     if (isRoutesMatches(pathname, userProtectedRoutes)) {
         return "USER";

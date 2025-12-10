@@ -46,11 +46,23 @@ export async function proxy(request: NextRequest) {
 
     const isAuth = isAuthRoute(pathname);
 
+    console.log({ routeOwner, isAuth, pathname, })
+
     if (isAuth && accessToken) {
         return NextResponse.redirect(
             new URL(getDefaultDashboardRoute(userRole as UserRole),
                 request.url
             ));
+    };
+
+    if (routeOwner === "COMMON") {
+        return NextResponse.next();
+    }
+
+    if (routeOwner === "ADMIN" || routeOwner === "SUPER_ADMIN" || routeOwner === "USER") {
+        if (userRole !== routeOwner) {
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
+        }
     };
 
     if (routeOwner === null) {
@@ -65,29 +77,31 @@ export async function proxy(request: NextRequest) {
 
     if (accessToken) {
         const userInfo = await getUserInfo();
-        if (userInfo?.isProfileCompleted) {
+        //If profile not completed, redirect to /my-profile force them finish setting up profile
+        if (!userInfo?.isProfileCompleted) {
             if (pathname !== "/my-profile") {
                 const updateProfileUrl = new URL("/my-profile", request.url);
                 updateProfileUrl.searchParams.set("redirect", pathname);
                 return NextResponse.redirect(updateProfileUrl);
             }
+            // If they are already on /my-profile, let them stay there to finish.
             return NextResponse.next();
         }
-        if (userInfo && !userInfo?.isProfileCompleted && pathname === "/my-profile") {
-            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
-        }
-        ;
-    };
 
-    if (routeOwner === "COMMON") {
+        // SCENARIO 2: Profile IS Completed
+        // We simply allow navigation. We deleted the block that redirected 
+        // /my-profile to the dashboard.
+
+        // (Optional) You might still want to redirect the homepage "/" to the dashboard
+
+        if (pathname === "/") {
+            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userInfo.role), request.url));
+        }
+
+        // Allow them to go anywhere, INCLUDING /my-profile
         return NextResponse.next();
     }
 
-    if (routeOwner === "ADMIN" || routeOwner === "SUPER_ADMIN" || routeOwner === "USER") {
-        if (userRole !== routeOwner) {
-            return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
-        }
-    };
 
     return NextResponse.next();
 };

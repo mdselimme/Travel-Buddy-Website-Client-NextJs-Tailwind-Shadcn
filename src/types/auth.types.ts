@@ -9,7 +9,6 @@ export type IResetPasswordInput = {
 export type IAuthLogin = {
     email: string;
     password: string;
-    redirectTo?: string;
 }
 
 export type IJwtPayload = {

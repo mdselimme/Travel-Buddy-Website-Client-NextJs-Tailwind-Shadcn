@@ -32,6 +32,7 @@ const RegisterPage = () => {
             alt="Register Image"
             fill={true}
             quality={75}
+            loading="eager"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>

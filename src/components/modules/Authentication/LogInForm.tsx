@@ -20,7 +20,10 @@ import Password from "./Password";
 import { authLogIn } from "@/actions/auth/login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { isValidRedirectForRole } from "@/lib/authRouteUtils";
+import {
+  getDefaultDashboardRoute,
+  isValidRedirectForRole,
+} from "@/lib/authRouteUtils";
 
 const logInSchema = z.object({
   email: z.email({ error: "Email is required." }).min(2, {
@@ -32,10 +35,10 @@ const logInSchema = z.object({
 });
 
 export function LoginForm({
-  redirectTo,
+  redirect,
   className,
   ...props
-}: React.ComponentProps<"div"> & { redirectTo: string }) {
+}: React.ComponentProps<"div"> & { redirect: string }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof logInSchema>>({
     resolver: zodResolver(logInSchema),
@@ -45,22 +48,22 @@ export function LoginForm({
     },
   });
   const onSubmit = async (data: z.infer<typeof logInSchema>) => {
-    const logInData = { ...data, redirectTo };
+    const logInData = {
+      email: data.email,
+      password: data.password,
+    };
     try {
       const result = await authLogIn(logInData);
+      console.log(redirect);
       toast.success(result.message || "Logged in successfully.");
-      console.log({ result, redirectTo });
-      if (redirectTo || !result?.data?.isProfileCompleted) {
-        if (isValidRedirectForRole(redirectTo, result.role)) {
-          const requestedPath = redirectTo;
-          router.push(
-            `/my-profile${redirectTo ? `?redirectTo=${requestedPath}` : ""}`
-          );
-        } else {
-          router.push("/my-profile");
+      const requestedPath = redirect || getDefaultDashboardRoute(result.role);
+      if (!result?.data?.isProfileCompleted) {
+        if (isValidRedirectForRole(redirect, result.role)) {
+          router.push(`/my-profile?redirect=${requestedPath}`);
+          return;
         }
       }
-      router.push(redirectTo);
+      router.push(redirect || getDefaultDashboardRoute(result.role));
     } catch (error: any) {
       const msg = error?.message || "Something went wrong. Please try again.";
 

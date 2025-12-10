@@ -9,7 +9,7 @@ export default async function LoginPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const redirectTo = (await searchParams)?.redirectTo;
+  const redirect = await searchParams;
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
@@ -20,6 +20,7 @@ export default async function LoginPage({
             alt="Login Image"
             fill={true}
             quality={75}
+            loading="eager"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
@@ -37,7 +38,7 @@ export default async function LoginPage({
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
             <div>
-              <LoginForm redirectTo={redirectTo as string} />
+              <LoginForm redirect={redirect?.redirect as string} />
             </div>
           </div>
         </div>
