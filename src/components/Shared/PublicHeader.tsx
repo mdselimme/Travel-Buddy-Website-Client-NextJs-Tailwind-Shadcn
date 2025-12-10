@@ -55,7 +55,7 @@ const PublicHeader = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 xl:space-x-8 bg">
+          <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 xl:space-x-8 bg-secondary rounded-full px-4 py-2">
             {navLinks.map((link) => (
               <Link
                 key={link.title}
