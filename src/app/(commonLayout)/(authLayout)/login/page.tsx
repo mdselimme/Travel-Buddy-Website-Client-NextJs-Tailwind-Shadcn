@@ -4,12 +4,12 @@ import Link from "next/link";
 import LogInImage from "@/assets/images/login-image.png";
 import Image from "next/image";
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const redirectTo = searchParams?.redirectTo || "/dashboard";
+  const redirectTo = (await searchParams)?.redirectTo;
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">

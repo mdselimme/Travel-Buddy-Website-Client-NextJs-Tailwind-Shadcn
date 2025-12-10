@@ -49,10 +49,13 @@ export function LoginForm({
     try {
       const result = await authLogIn(logInData);
       toast.success(result.message || "Logged in successfully.");
-      if (redirectTo && !result?.data?.isProfileCompleted) {
+      console.log({ result, redirectTo });
+      if (redirectTo || !result?.data?.isProfileCompleted) {
         if (isValidRedirectForRole(redirectTo, result.role)) {
-          const requestedPath = redirectTo.toString();
-          router.push(`/my-profile?redirectTo=${requestedPath}`);
+          const requestedPath = redirectTo;
+          router.push(
+            `/my-profile${redirectTo ? `?redirectTo=${requestedPath}` : ""}`
+          );
         } else {
           router.push("/my-profile");
         }
