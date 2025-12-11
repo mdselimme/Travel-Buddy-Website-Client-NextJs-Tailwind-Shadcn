@@ -16,7 +16,7 @@ export default function PublicFooter() {
   return (
     <footer className="bg-white border-t">
       {/* Main Footer Content */}
-      <div className="max-w-7xl mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-5 gap-8">
+      <div className="container mx-auto px-4 py-16 grid grid-cols-1 md:grid-cols-5 gap-8">
         {/* Brand Section */}
         <div className="col-span-1">
           <Link href="/" className="text-2xl font-bold text-primary mb-3">
@@ -160,7 +160,7 @@ export default function PublicFooter() {
       </div>
 
       {/* Contact Info Section */}
-      <div className="max-w-7xl mx-auto px-4 py-8 border-t grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="container mx-auto px-4 py-8 border-t grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="flex items-center gap-3">
           <Phone className="w-5 h-5 text-primary" />
           <div>

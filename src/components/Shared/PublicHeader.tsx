@@ -45,7 +45,7 @@ const PublicHeader = () => {
           : "bg-white/90 dark:bg-gray-900/80 backdrop-blur-md"
       } border-b border-gray-200 dark:border-gray-800`}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-14 sm:h-16 lg:h-20 items-center justify-between">
           {/* Logo and Name */}
           <div className="flex items-center">

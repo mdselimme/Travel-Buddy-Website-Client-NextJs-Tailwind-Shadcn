@@ -8,6 +8,7 @@ const SERVER_API_URL = process.env.NEXT_PUBLIC_SERVER_API_URL || "http://localho
 
 // /auth/login
 const serverFetchHelper = async (endpoint: string, options: RequestInit): Promise<Response> => {
+
     const { headers, ...restOptions } = options;
     const accessToken = await getCookie("accessToken");
 
