@@ -1,14 +1,28 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useEffect } from "react";
-import { Menu, X, LogIn, UserRoundPlus } from "lucide-react";
+import { Menu, X, LogIn, UserRoundPlus, LogOut } from "lucide-react";
 import { Button } from "../ui/button";
 import WebLogo from "@/assets/icons/WebLogo";
 import Link from "next/link";
+import { getUserRole } from "@/actions/user/getUserRole";
+import {
+  headerAdminNavItems,
+  headerGuestNavItems,
+  headerUserNavItems,
+} from "@/lib/headerNavItems";
+import { logOutUser } from "@/actions/auth/logOut";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { getCookie } from "@/lib/tokenHandlers";
 
 const PublicHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
 
+  const router = useRouter();
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
@@ -29,13 +43,42 @@ const PublicHeader = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const navLinks = [
-    { href: "/", title: "Home", role: "common" },
-    { href: "/explore-travelers", title: "Explore Travelers", role: "common" },
-    { href: "/find-travel-buddy", title: "Find Travel Buddy", role: "common" },
-    { href: "/my-travel-plans", title: "My Travel Plans", role: "auth" },
-    { href: "/profile", title: "Profile", role: "auth" },
-  ];
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      const role = await getUserRole();
+      setUserRole(role);
+      const accessToken = await getCookie("accessToken");
+      if (accessToken) {
+        setToken(accessToken);
+      } else {
+        setToken(null);
+      }
+    };
+    fetchUserRole();
+  }, []);
+
+  let navLinks;
+
+  if (userRole === "ADMIN" || userRole === "SUPER_ADMIN") {
+    navLinks = headerAdminNavItems;
+  } else if (userRole === "USER") {
+    navLinks = headerUserNavItems;
+  } else {
+    navLinks = headerGuestNavItems;
+  }
+
+  const handleLogOut = async () => {
+    try {
+      const result = await logOutUser();
+      if (result.success) {
+        setToken(null);
+        router.push("/login");
+        toast.success(result.message || "Logged out successfully");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed to log out");
+    }
+  };
 
   return (
     <header
@@ -69,14 +112,27 @@ const PublicHeader = () => {
 
           {/* Desktop CTA Buttons */}
           <div className="hidden md:flex items-center space-x-2 lg:space-x-3">
-            <Button variant="outline">
-              <Link href={"/register"}>Register</Link>
-              <UserRoundPlus />
-            </Button>
-            <Button className="text-white">
-              <Link href={"/login"}>Login</Link>
-              <LogIn />
-            </Button>
+            {token ? (
+              <Button onClick={handleLogOut} className="text-white">
+                LogOut
+                <LogOut />
+              </Button>
+            ) : (
+              <>
+                <Link href={"/register"}>
+                  <Button variant="outline">
+                    Register
+                    <UserRoundPlus />
+                  </Button>
+                </Link>
+                <Link href={"/login"}>
+                  <Button className="text-white">
+                    Login
+                    <LogIn />
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -112,18 +168,27 @@ const PublicHeader = () => {
                 </a>
               ))}
               <div className="pt-4 mt-2 border-t border-gray-200 dark:border-gray-700 flex flex-col space-y-2">
-                <Link href={"/register"}>
-                  Register
-                  <Button variant="outline">
-                    <UserRoundPlus />
+                {token ? (
+                  <Button onClick={handleLogOut} className="w-full text-white">
+                    LogOut
+                    <LogOut />
                   </Button>
-                </Link>
-                <Link href={"/login"}>
-                  <Button className="text-white inline-block">
-                    Login
-                    <LogIn />
-                  </Button>
-                </Link>
+                ) : (
+                  <>
+                    <Link href={"/register"}>
+                      Register
+                      <Button variant="outline">
+                        <UserRoundPlus />
+                      </Button>
+                    </Link>
+                    <Link href={"/login"}>
+                      <Button className="text-white inline-block">
+                        Login
+                        <LogIn />
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
