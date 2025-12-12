@@ -1,4 +1,6 @@
+"use server";
 import { serverFetch } from "@/lib/serverFetch";
+import { revalidateTag } from "next/cache";
 
 
 
@@ -14,6 +16,8 @@ export const createTravelPlanAction = async (travelPlanData: FormData) => {
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Failed to create travel plan.");
         }
+
+        revalidateTag("travel-plans", { expire: 0 });
 
         return data;
     } catch (error) {
