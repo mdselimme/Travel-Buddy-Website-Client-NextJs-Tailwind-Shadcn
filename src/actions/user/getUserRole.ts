@@ -1,3 +1,4 @@
+"use server";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { getCookie } from "@/lib/tokenHandlers";
 import { verifyAccessToken } from "@/lib/verifyAccessToken";

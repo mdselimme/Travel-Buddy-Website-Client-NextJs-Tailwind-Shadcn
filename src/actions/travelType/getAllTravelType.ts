@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { serverFetch } from "@/lib/serverFetch";
 

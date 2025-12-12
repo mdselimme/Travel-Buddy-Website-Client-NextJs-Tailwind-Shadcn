@@ -175,7 +175,7 @@ export default function CreateNewPlanForm({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log({ file });
+
     if (file) {
       setImageFile(file);
       const reader = new FileReader();

@@ -1,11 +1,8 @@
 import { getMyTravelPlans } from "@/actions/TravelPlan/getMyTravelPlans";
 import TravelPlanTable from "@/components/modules/Plan/TravelPlanTable";
-import React from "react";
 
 const MyPlansPage = async () => {
   const myTravelPlans = await getMyTravelPlans();
-
-  console.log(myTravelPlans);
 
   return (
     <div>

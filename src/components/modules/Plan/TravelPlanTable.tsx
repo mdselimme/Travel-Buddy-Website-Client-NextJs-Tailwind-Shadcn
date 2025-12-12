@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditTravelPlanModal from "./EditTravelPlanModal";
 import ViewTravelPlanModal from "./ViewTravelPlanModal";
+import { deleteTravelPlanAction } from "@/actions/TravelPlan/deleteTravelPlan";
 
 interface TravelPlanTableProps {
   plans: ITravelPlan[];
@@ -86,13 +87,18 @@ export default function TravelPlanTable({
   };
 
   const handleDeleteConfirm = async () => {
-    if (!deleteId || !onDelete) return;
+    if (!deleteId) return;
 
     setIsDeleting(true);
     try {
-      await onDelete(deleteId);
+      await deleteTravelPlanAction(deleteId);
       toast.success("Travel plan deleted successfully");
       setDeleteId(null);
+
+      // Call onDelete callback if provided to update parent component
+      if (onDelete) {
+        await onDelete(deleteId);
+      }
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to delete plan"

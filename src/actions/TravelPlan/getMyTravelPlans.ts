@@ -4,7 +4,11 @@ import { serverFetch } from "@/lib/serverFetch";
 
 export const getMyTravelPlans = async () => {
     try {
-        const response = await serverFetch.get("/travel-plan/my-plans");
+        const response = await serverFetch.get("/travel-plan/my-plans", {
+            next: {
+                tags: ["my-travel-plans"]
+            }
+        });
         const data = await response.json();
 
         if (!response.ok || !data.success) {

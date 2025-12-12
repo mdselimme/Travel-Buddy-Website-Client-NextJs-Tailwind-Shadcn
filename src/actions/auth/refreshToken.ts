@@ -1,3 +1,4 @@
+"use server"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverFetch } from "@/lib/serverFetch";
 import { deleteCookie, getCookie, setCookie } from "@/lib/tokenHandlers";

@@ -1,6 +1,7 @@
 import { UserRole } from "./auth.types";
 
 
+
 export enum ActiveStatus {
     ACTIVE = 'ACTIVE',
     INACTIVE = 'INACTIVE',

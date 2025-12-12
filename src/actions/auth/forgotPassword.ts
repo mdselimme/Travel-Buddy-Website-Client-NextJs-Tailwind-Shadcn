@@ -1,3 +1,4 @@
+"use server"
 import { IResetPasswordInput } from "@/types/auth.types";
 
 

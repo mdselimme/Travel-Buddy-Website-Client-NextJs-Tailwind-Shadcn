@@ -14,7 +14,6 @@ export const headerUserNavItems: IHeaderNavItem[] = [
     { href: "/", title: "Home", },
     { href: "/explore-travelers", title: "Explore Travelers", },
     { href: "/find-travel-buddy", title: "Find Travel Buddy", },
-    { href: "/my-travel-plans", title: "My Travel Plans", },
     { href: "/profile", title: "Profile", },
     { href: "/admin/dashboard", title: "Dashboard" },
 ];

@@ -36,6 +36,7 @@ import { X, Plus, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import Image from "next/image";
+import { travelPlanUpdateAction } from "@/actions/TravelPlan/travelPlanUpdate";
 
 const editPlanSchema = z.object({
   travelTitle: z.string().min(1, "Travel Title is required"),
@@ -77,11 +78,12 @@ export default function EditTravelPlanModal({
   plan,
   open,
   onOpenChange,
-  onSubmit,
 }: EditTravelPlanModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [travelTypeOptions, setTravelTypeOptions] = useState<ITravelType[]>([]);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [removeOriginalImage, setRemoveOriginalImage] = useState(false);
 
   const form = useForm<EditPlanFormData>({
     resolver: zodResolver(editPlanSchema),
@@ -110,6 +112,7 @@ export default function EditTravelPlanModal({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -120,6 +123,8 @@ export default function EditTravelPlanModal({
 
   const removeImage = () => {
     setImagePreview(null);
+    setImageFile(null);
+    setRemoveOriginalImage(true);
     const input = document.getElementById(
       "edit-image-input"
     ) as HTMLInputElement;
@@ -133,6 +138,9 @@ export default function EditTravelPlanModal({
       setTravelTypeOptions(allTravelTypes.data);
     };
     fetchTravelTypes();
+    setRemoveOriginalImage(false);
+    setImagePreview(null);
+    setImageFile(null);
     if (plan) {
       // Extract only IDs from travelTypes array in case they are objects
       const travelTypeIds = Array.isArray(plan.travelTypes)
@@ -160,9 +168,17 @@ export default function EditTravelPlanModal({
 
     setIsSubmitting(true);
     try {
-      await onSubmit(plan._id, data);
-      onOpenChange(false);
-      toast.success("Travel plan updated successfully!");
+      const formData = new FormData();
+
+      formData.append("data", JSON.stringify(data));
+      if (imageFile) {
+        formData.append("file", imageFile);
+      }
+      const result = await travelPlanUpdateAction(plan._id, formData);
+      if (result && result.success) {
+        toast.success("Travel plan updated successfully!");
+        onOpenChange(false);
+      }
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Error updating plan"
@@ -207,12 +223,18 @@ export default function EditTravelPlanModal({
               {/* Image Upload */}
               <FormItem>
                 <FormLabel>Plan Image</FormLabel>
-                {imagePreview || plan?.thumbnail ? (
+                {(!removeOriginalImage && plan?.thumbnail) || imagePreview ? (
                   <div className="relative w-full h-64 rounded-lg overflow-hidden border border-border">
                     <Image
-                      src={imagePreview || plan?.thumbnail || ""}
+                      src={
+                        imagePreview ||
+                        (!removeOriginalImage && plan?.thumbnail) ||
+                        ""
+                      }
                       alt="Plan preview"
-                      fill
+                      fill={true}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      loading="eager"
                       className="object-cover"
                     />
                     <Button
