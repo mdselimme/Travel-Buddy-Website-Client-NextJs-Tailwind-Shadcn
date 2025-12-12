@@ -6,7 +6,7 @@ export enum SubscriptionPlan {
 
 
 export interface ISubscription {
-    _id?: string;
+    _id: string;
     plan: SubscriptionPlan;
     price: number;
     currency: string;
