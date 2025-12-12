@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -16,11 +18,31 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { ActiveStatus } from "@/types/user.types";
+import { UserRole } from "@/types/auth.types";
+import { userStatusUpdate } from "@/actions/user/userStatusUpdate";
+import { toast } from "sonner";
+
+// Zod Validation Schema
+const editUserStatusSchema = z.object({
+  isActive: z.enum(Object.values(ActiveStatus), {
+    message: "Please select a valid status",
+  }),
+});
+
+type EditUserStatusFormData = z.infer<typeof editUserStatusSchema>;
 
 interface UserProfile {
   _id?: string;
@@ -32,8 +54,8 @@ interface UserProfile {
 interface User {
   _id: string;
   email: string;
-  role: "USER" | "ADMIN" | "SUPER_ADMIN";
-  isActive: "ACTIVE" | "INACTIVE";
+  role: UserRole;
+  isActive: ActiveStatus;
   isVerified: boolean;
   isProfileCompleted: boolean;
   profile: UserProfile;
@@ -45,11 +67,7 @@ interface EditUserModalProps {
   user: User | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (formData: {
-    fullName: string;
-    role: string;
-    isActive: string;
-  }) => Promise<void>;
+  onSubmit: (formData: { isActive: ActiveStatus }) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -60,24 +78,34 @@ export default function EditUserModal({
   onSubmit,
   isLoading = false,
 }: EditUserModalProps) {
-  const [editForm, setEditForm] = useState({
-    fullName: "",
-    role: "USER",
-    isActive: "ACTIVE",
+  const form = useForm<EditUserStatusFormData>({
+    resolver: zodResolver(editUserStatusSchema),
+    defaultValues: {
+      isActive: user?.isActive as ActiveStatus,
+    },
   });
 
   useEffect(() => {
     if (user && open) {
-      setEditForm({
-        fullName: user.profile.fullName,
-        role: user.role,
+      form.reset({
         isActive: user.isActive,
       });
     }
-  }, [user, open]);
+  }, [user, open, form]);
 
-  const handleSubmit = async () => {
-    await onSubmit(editForm);
+  const handleSubmit = async (data: EditUserStatusFormData) => {
+    try {
+      const result = await userStatusUpdate(user!._id, data.isActive);
+      if (result.success) {
+        toast.success("User status updated successfully");
+      }
+      await onSubmit(data);
+      onOpenChange(false);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update user status"
+      );
+    }
   };
 
   return (
@@ -147,79 +175,60 @@ export default function EditUserModal({
         )}
 
         <div className="space-y-4">
-          {/* Full Name Input */}
-          <div className="space-y-2">
-            <Label htmlFor="fullName">Full Name</Label>
-            <Input
-              id="fullName"
-              type="text"
-              placeholder="Enter full name"
-              value={editForm.fullName}
-              onChange={(e) =>
-                setEditForm({ ...editForm, fullName: e.target.value })
-              }
-              disabled={isLoading}
-            />
-          </div>
-
-          {/* Role Select */}
-          <div className="space-y-2">
-            <Label htmlFor="role">Role</Label>
-            <Select
-              value={editForm.role}
-              onValueChange={(value) =>
-                setEditForm({ ...editForm, role: value })
-              }
-              disabled={isLoading}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="space-y-4"
             >
-              <SelectTrigger id="role">
-                <SelectValue placeholder="Select role" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="USER">User</SelectItem>
-                <SelectItem value="ADMIN">Admin</SelectItem>
-                <SelectItem value="SUPER_ADMIN">Super Admin</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              {/* Status Select */}
+              <FormField
+                control={form.control}
+                name="isActive"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>User Status</FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      disabled={isLoading}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="ACTIVE">ACTIVE</SelectItem>
+                        <SelectItem value="INACTIVE">INACTIVE</SelectItem>
+                        <SelectItem value="DELETED">DELETED</SelectItem>
+                        <SelectItem value="BLOCKED">BLOCKED</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          {/* Status Select */}
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Select
-              value={editForm.isActive}
-              onValueChange={(value) =>
-                setEditForm({ ...editForm, isActive: value })
-              }
-              disabled={isLoading}
-            >
-              <SelectTrigger id="status">
-                <SelectValue placeholder="Select status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="ACTIVE">Active</SelectItem>
-                <SelectItem value="INACTIVE">Inactive</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Dialog Actions */}
-        <div className="flex gap-4 justify-end pt-4">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={isLoading}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSubmit}
-            disabled={isLoading}
-            className="bg-primary hover:bg-primary/90"
-          >
-            {isLoading ? "Updating..." : "Update"}
-          </Button>
+              {/* Dialog Actions */}
+              <div className="flex gap-4 justify-end pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => onOpenChange(false)}
+                  disabled={isLoading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="bg-primary hover:bg-primary/90 text-white"
+                >
+                  {isLoading ? "Updating..." : "Update"}
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
       </DialogContent>
     </Dialog>

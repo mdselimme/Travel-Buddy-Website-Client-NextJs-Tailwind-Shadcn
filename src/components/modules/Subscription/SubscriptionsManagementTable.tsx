@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import {
   Table,
@@ -17,17 +16,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+
 import { ISubscription, SubscriptionPlan } from "@/types/subscription";
-import { Edit, Trash2, MoreHorizontal } from "lucide-react";
+import { Edit, MoreHorizontal } from "lucide-react";
 import EditSubscriptionModal from "./EditSubscriptionModal";
 
 interface SubscriptionWithId extends ISubscription {
@@ -72,28 +63,10 @@ export default function SubscriptionsManagementTable({
 }: SubscriptionsManagementTableProps) {
   const [subscriptions, setSubscriptions] =
     useState<SubscriptionWithId[]>(initialSubscriptions);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [editingSubscription, setEditingSubscription] =
     useState<SubscriptionWithId | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-
-  const handleDelete = async () => {
-    if (!deleteId) return;
-    setIsDeleting(true);
-    try {
-      // TODO: Implement delete subscription action
-      console.log("Deleting subscription:", deleteId);
-      // After successful deletion, remove from list
-      setSubscriptions(subscriptions.filter((sub) => sub._id !== deleteId));
-      setDeleteId(null);
-    } catch (error) {
-      console.error("Delete failed:", error);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
 
   const handleEditClick = (subscription: SubscriptionWithId) => {
     setEditingSubscription(subscription);
@@ -187,13 +160,6 @@ export default function SubscriptionsManagementTable({
                           <Edit className="w-4 h-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => setDeleteId(subscription._id)}
-                          className="text-destructive focus:text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -212,32 +178,6 @@ export default function SubscriptionsManagementTable({
           </TableBody>
         </Table>
       </div>
-
-      {/* Delete Confirmation Dialog */}
-      <AlertDialog
-        open={!!deleteId}
-        onOpenChange={(open) => !open && setDeleteId(null)}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Subscription</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this subscription plan? This
-              action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="flex gap-4 justify-end">
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="bg-destructive hover:bg-destructive/90"
-            >
-              {isDeleting ? "Deleting..." : "Delete"}
-            </AlertDialogAction>
-          </div>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* Edit Subscription Modal */}
       <EditSubscriptionModal

@@ -34,6 +34,7 @@ export default function ProfileDisplay({ profile }: ProfileDisplayProps) {
                   alt={profile.fullName}
                   width={150}
                   height={150}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="rounded-lg object-cover border-4 border-primary"
                 />
               ) : (

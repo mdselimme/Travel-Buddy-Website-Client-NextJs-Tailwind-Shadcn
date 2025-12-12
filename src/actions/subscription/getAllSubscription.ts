@@ -6,7 +6,9 @@ import { ISubscription } from "@/types/subscription";
 
 export const getAllSubscription = async () => {
     try {
-        const response = await serverFetch.get("/subscription");
+        const response = await serverFetch.get("/subscription", {
+            next: { tags: ["subscriptions"] }
+        });
         const data = await response.json();
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Failed to fetch subscriptions");

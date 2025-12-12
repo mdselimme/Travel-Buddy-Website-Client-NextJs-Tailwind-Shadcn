@@ -30,6 +30,8 @@ import { Eye, Edit, Trash2, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import EditUserModal from "./EditUserModal";
 import Link from "next/link";
+import { ActiveStatus } from "@/types/user.types";
+import { UserRole } from "@/types/auth.types";
 
 interface UserProfile {
   _id?: string;
@@ -41,8 +43,8 @@ interface UserProfile {
 interface User {
   _id: string;
   email: string;
-  role: "USER" | "ADMIN" | "SUPER_ADMIN";
-  isActive: "ACTIVE" | "INACTIVE";
+  role: UserRole;
+  isActive: ActiveStatus;
   isVerified: boolean;
   isProfileCompleted: boolean;
   profile: UserProfile;
@@ -122,8 +124,8 @@ export default function ManageUsersTable({
           user._id === editingUser._id
             ? {
                 ...user,
-                role: formData.role as "USER" | "ADMIN" | "SUPER_ADMIN",
-                isActive: formData.isActive as "ACTIVE" | "INACTIVE",
+                role: formData.role as UserRole,
+                isActive: formData.isActive as ActiveStatus,
                 profile: {
                   ...user.profile,
                   fullName: formData.fullName,
@@ -171,6 +173,7 @@ export default function ManageUsersTable({
                             alt={user.profile.fullName}
                             fill
                             className="object-cover"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           />
                         </div>
                       ) : (
@@ -204,7 +207,7 @@ export default function ManageUsersTable({
                     {user.profile.isSubscribed ? (
                       <Badge className="bg-blue-600 text-white">Premium</Badge>
                     ) : (
-                      <Badge variant="secondary">Free</Badge>
+                      <Badge variant="secondary">Not Subscribed</Badge>
                     )}
                   </TableCell>
 
@@ -284,10 +287,14 @@ export default function ManageUsersTable({
 
       {/* Edit User Modal */}
       <EditUserModal
-        user={editingUser}
+        user={editingUser as User}
+        onSubmit={
+          handleEditSubmit as (data: {
+            isActive: ActiveStatus;
+          }) => Promise<void>
+        }
         open={editModalOpen}
         onOpenChange={setEditModalOpen}
-        onSubmit={handleEditSubmit}
         isLoading={isUpdating}
       />
     </>

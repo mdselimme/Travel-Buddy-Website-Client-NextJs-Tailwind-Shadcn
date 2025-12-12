@@ -11,7 +11,9 @@ interface IQueryOptions {
 export const getAllUser = async (query: IQueryOptions) => {
 
     try {
-        const response = await serverFetch.get(`/user?limit=${query.limit}&page=${query.page}`);
+        const response = await serverFetch.get(`/user?limit=${query.limit}&page=${query.page}`, {
+            next: { tags: ["users"] }
+        });
 
         const data = await response.json();
 
