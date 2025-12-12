@@ -1,4 +1,5 @@
 import { serverFetch } from "@/lib/serverFetch";
+import { ISubscription } from "@/types/subscription";
 
 
 
@@ -10,7 +11,7 @@ export const getAllSubscription = async () => {
             throw new Error(data.message || "Failed to fetch subscriptions");
         }
 
-        return data;
+        return data.data as ISubscription[];
     } catch (error) {
         throw new Error(error instanceof Error ? error.message : "Subscription fetch error");
     }

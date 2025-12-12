@@ -3,7 +3,6 @@ import { getUserInfo } from "@/actions/user/getUserInfo";
 import MyProfile from "@/components/modules/MyProfile/MyProfile";
 import { IProfile } from "@/types/profile.types";
 import { IUser } from "@/types/user.types";
-import React from "react";
 
 const MyProfilePage = async () => {
   const profile = await getMeProfile();

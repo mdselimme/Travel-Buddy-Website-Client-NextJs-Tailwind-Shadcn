@@ -16,7 +16,7 @@ export const headerUserNavItems: IHeaderNavItem[] = [
     { href: "/find-travel-buddy", title: "Find Travel Buddy", },
     { href: "/my-travel-plans", title: "My Travel Plans", },
     { href: "/profile", title: "Profile", },
-    { href: "/admin/dashboard", title: "Admin Dashboard" },
+    { href: "/admin/dashboard", title: "Dashboard" },
 ];
 
 export const headerAdminNavItems: IHeaderNavItem[] = [

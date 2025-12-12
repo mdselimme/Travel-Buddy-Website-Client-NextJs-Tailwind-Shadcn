@@ -97,6 +97,12 @@ const userNavItems: NavSection[] = [
                 href: "/dashboard/my-subscriptions",
                 icon: "Box",
                 roles: ["USER"],
+            },
+            {
+                title: "Create New Plan",
+                href: "/dashboard/create-plan",
+                icon: "PlusCircle",
+                roles: ["USER"],
             }
         ]
     }

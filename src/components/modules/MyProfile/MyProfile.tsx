@@ -11,6 +11,7 @@ import { getInitials } from "@/types/formatter";
 import { IProfile } from "@/types/profile.types";
 import { IUser } from "@/types/user.types";
 import { BadgeCheck, Camera, Loader2, Save } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
@@ -133,9 +134,11 @@ const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
                   <>
                     {userInfo?.role === "ADMIN" ||
                     userInfo?.role === "SUPER_ADMIN" ? (
-                      <p className="bg-success text-primary px-5 py-2 rounded-full text-sm text-success-foreground mt-2 inline-block">
-                        No subscription needed
-                      </p>
+                      <>
+                        <p className="bg-success text-primary px-5 py-2 rounded-full text-sm text-success-foreground mt-2 inline-block">
+                          No subscription needed
+                        </p>
+                      </>
                     ) : (
                       <>
                         {profileData?.subStartDate &&
@@ -160,9 +163,16 @@ const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
                     )}
                   </>
                 ) : (
-                  <p className="bg-destructive text-secondary px-5 py-2 rounded-full text-sm text-destructive-foreground mt-2 inline-block">
-                    No active subscription
-                  </p>
+                  <div className="flex flex-col">
+                    <p className="bg-destructive text-secondary px-5 py-2 rounded-full text-sm text-destructive-foreground mt-2 inline-block">
+                      No active subscription
+                    </p>
+                    <Link href="/dashboard/subscription">
+                      <Button className="mt-3 text-secondary">
+                        Manage Subscription
+                      </Button>
+                    </Link>
+                  </div>
                 )}
               </div>
             </CardContent>
