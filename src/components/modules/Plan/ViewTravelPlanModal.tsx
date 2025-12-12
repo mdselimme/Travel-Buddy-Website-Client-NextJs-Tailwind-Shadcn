@@ -178,7 +178,7 @@ export default function ViewTravelPlanModal({
                     const typeId =
                       typeof type === "string"
                         ? type
-                        : (type as Record<string, string>)._id;
+                        : (type as unknown as Record<string, string>)._id;
                     const travelType = travelTypeOptions.find(
                       (t) => t._id === typeId
                     );

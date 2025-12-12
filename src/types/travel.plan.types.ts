@@ -1,3 +1,4 @@
+import { ITravelType } from "./travel.type";
 
 export enum TravelPlanStatus {
     UPCOMING = "UPCOMING",
@@ -23,7 +24,7 @@ export interface ITravelPlan {
     startDate: Date;
     endDate: Date;
     budgetRange: BudgetRange;
-    travelTypes: string[];
+    travelTypes: ITravelType[];
     travelDescription?: string;
     itinerary: string[];
     thumbnail: string;
