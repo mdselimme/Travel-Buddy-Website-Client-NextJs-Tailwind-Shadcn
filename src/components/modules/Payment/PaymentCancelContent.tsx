@@ -100,11 +100,6 @@ export default function PaymentCancelContent() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
-            <Link href="/find-travel-buddy" className="flex-1">
-              <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6">
-                Try Again
-              </Button>
-            </Link>
             <Link href="/dashboard" className="flex-1">
               <Button variant="outline" className="w-full font-semibold py-6">
                 Go to Dashboard

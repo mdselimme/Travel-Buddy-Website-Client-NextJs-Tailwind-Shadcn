@@ -1,7 +1,17 @@
+import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
+import { getUserInfo } from "@/actions/user/getUserInfo";
+import CreateNewPlanForm from "@/components/modules/Plan/CreateNewPlanForm";
 import React from "react";
 
-const CreateANewPlanPage = () => {
-  return <div>CreateANewPlanPage</div>;
+const CreateANewPlanPage = async () => {
+  const { data: allTravelTypes } = await getAllTravelType();
+  const user = await getUserInfo();
+
+  return (
+    <div>
+      <CreateNewPlanForm travelTypes={allTravelTypes} userId={user?._id} />
+    </div>
+  );
 };
 
 export default CreateANewPlanPage;

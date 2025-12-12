@@ -144,7 +144,7 @@ const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
                         {profileData?.subStartDate &&
                           profileData?.subEndDate && (
                             <div className="mt-2 space-y-1">
-                              <p className="bg-success text-secondary px-5 py-2 rounded-full text-sm text-success-foreground inline-block">
+                              <p className="bg-primary text-secondary px-5 py-2 rounded-full text-sm text-success-foreground inline-block">
                                 Active Subscription
                               </p>
                               <p className="text-xs text-muted-foreground">
