@@ -1,5 +1,5 @@
 import { getAllTravelsPlans } from "@/actions/TravelPlan/getAllTravelPlans";
-import ManageTravelPlansTable from "@/components/modules/Plan/ManageTravelPlansTable";
+import ManageTravelPlansTable from "@/components/modules/TravelPlan/ManageTravelPlansTable";
 
 const ManagePlanPage = async () => {
   const { data: allTravelPlans } = await getAllTravelsPlans();

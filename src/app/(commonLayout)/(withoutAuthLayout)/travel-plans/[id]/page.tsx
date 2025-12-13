@@ -1,8 +1,8 @@
 import { getTravelPlanById } from "@/actions/TravelPlan/getTravelPlanById";
 
-import TravelPlanDetailsDisplay from "@/components/modules/Plan/TravelPlanDetailsDisplay";
-import HostProfileCard from "@/components/modules/Plan/HostProfileCard";
-import RequestToJoinButton from "@/components/modules/Plan/RequestToJoinButton";
+import TravelPlanDetailsDisplay from "@/components/modules/TravelPlan/TravelPlanDetailsDisplay";
+import HostProfileCard from "@/components/modules/TravelPlan/HostProfileCard";
+import RequestToJoinButton from "@/components/modules/TravelPlan/RequestToJoinButton";
 import Image from "next/image";
 import React from "react";
 import { getProfileByUserId } from "@/actions/profile/getProfileByUserId";

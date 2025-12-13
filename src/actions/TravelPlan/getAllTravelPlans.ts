@@ -2,9 +2,9 @@
 import { serverFetch } from "@/lib/serverFetch";
 
 
-export const getAllTravelsPlans = async () => {
+export const getAllTravelsPlans = async ({ destination, startDate, travelType }: { destination: string, startDate: string, travelType: string }) => {
     try {
-        const response = await serverFetch.get("/travel-plan", {
+        const response = await serverFetch.get(`/travel-plan?destination=${destination}&startDate=${startDate}&travelType=${travelType}`, {
             next: {
                 tags: ["travel-plans"]
             }
