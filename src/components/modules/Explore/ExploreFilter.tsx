@@ -13,9 +13,7 @@ const ExploreFilter = ({ travelTypes = [] }: FilterSectionProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [destination, setDestination] = useState(
-    searchParams.get("destination") || ""
-  );
+  const [search, setSearch] = useState(searchParams.get("search") || "");
   const [date, setDate] = useState(searchParams.get("startDate") || "");
   const [travelType, setTravelType] = useState(
     searchParams.get("travelType") || ""
@@ -23,7 +21,7 @@ const ExploreFilter = ({ travelTypes = [] }: FilterSectionProps) => {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (destination) params.append("destination", destination);
+    if (search) params.append("search", search);
     if (date) params.append("startDate", date);
     if (travelType) params.append("travelType", travelType);
 
@@ -32,7 +30,7 @@ const ExploreFilter = ({ travelTypes = [] }: FilterSectionProps) => {
   };
 
   const handleRefresh = () => {
-    setDestination("");
+    setSearch("");
     setDate("");
     setTravelType("");
     router.push("/explore");
@@ -49,8 +47,8 @@ const ExploreFilter = ({ travelTypes = [] }: FilterSectionProps) => {
           <input
             type="text"
             placeholder="Enter destination..."
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>

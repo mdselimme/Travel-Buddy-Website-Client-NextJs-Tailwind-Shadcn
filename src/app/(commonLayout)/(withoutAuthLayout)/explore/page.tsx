@@ -12,14 +12,12 @@ const ExplorePage = async ({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
   const resolvedSearchParams = await searchParams;
-  // destination=Mymensingh&startDate=2025-12-11&travelType=Adventure%20Travel&page=1&limit=10?
-  console.log({ resolvedSearchParams });
-  const { destination, startDate, travelType } = resolvedSearchParams;
-  console.log(destination, startDate, travelType);
+
+  const { search, startDate, travelType } = resolvedSearchParams;
   const { data: allTravelPlans } = await getAllTravelsPlans({
-    destination,
-    startDate,
-    travelType,
+    search: Array.isArray(search) ? search[0] : search,
+    startDate: Array.isArray(startDate) ? startDate[0] : startDate,
+    travelType: Array.isArray(travelType) ? travelType[0] : travelType,
   });
   const { data: travelTypes } = await getAllTravelType();
 
