@@ -2,7 +2,7 @@
 
 import { serverFetch } from "@/lib/serverFetch";
 
-export const deleteUser = async (userId: string) => {
+export const deleteUserAction = async (userId: string) => {
     try {
         const response = await serverFetch.delete(`/user/${userId}`);
 
