@@ -6,7 +6,7 @@ export interface IHeaderNavItem {
 
 export const headerGuestNavItems: IHeaderNavItem[] = [
     { href: "/", title: "Home", },
-    { href: "/explore-travelers", title: "Explore Travelers", },
+    { href: "/explore", title: "Explore", },
     { href: "/find-travel-buddy", title: "Find Travel Buddy", },
 ];
 

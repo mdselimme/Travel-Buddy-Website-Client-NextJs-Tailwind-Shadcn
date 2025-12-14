@@ -63,6 +63,12 @@ export const adminNavItems: NavSection[] = [
                 icon: "Box",
                 roles: ["SUPER_ADMIN", "ADMIN"],
             },
+            {
+                title: "Travel Types",
+                href: "/admin/dashboard/travel-types",
+                icon: "PlaneTakeoff",
+                roles: ["SUPER_ADMIN", "ADMIN"],
+            },
         ]
     }
 ];

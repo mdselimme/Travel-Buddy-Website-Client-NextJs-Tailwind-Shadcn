@@ -14,4 +14,4 @@ export const getMyMatches = async () => {
         console.log("Error in getMyMatches:", error);
         throw new Error(error instanceof Error ? error.message : "Error fetching matches.");
     }
-}
+};

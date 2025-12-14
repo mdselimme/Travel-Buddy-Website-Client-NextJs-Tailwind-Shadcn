@@ -2,8 +2,9 @@
 
 import { serverFetch } from "@/lib/serverFetch";
 import { ITravelType } from "@/types/travel.type";
+import { revalidateTag } from "next/cache";
 
-export const createTravelTypeAction = async (travelTypeData: ITravelType) => {
+export const createTravelTypeAction = async (travelTypeData: Partial<ITravelType>) => {
     try {
         const response = await serverFetch.post("/travel-type", {
             body: JSON.stringify(travelTypeData),
@@ -15,7 +16,8 @@ export const createTravelTypeAction = async (travelTypeData: ITravelType) => {
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Failed to create travel type.");
         }
-        return data.data;
+        revalidateTag("TRAVEL-TYPES", { expire: 0 });
+        return data;
     }
     catch (error) {
         console.log("Error in createTravelTypeAction:", error);

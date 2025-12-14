@@ -33,6 +33,7 @@ git clone git@github.com:mdselimme/Travel-Buddy-Website-Client-NextJs-Tailwind-S
 ```env
 
 NEXT_PUBLIC_BASE_API_URL=
+#Same token for server and client
 JWT_ACCESS_TOKEN_SECRET=
 
 ```
