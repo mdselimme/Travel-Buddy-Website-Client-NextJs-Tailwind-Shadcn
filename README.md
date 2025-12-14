@@ -9,6 +9,14 @@
     * Also user can connect with other travel plan.
     * User have to need subscription to use this website.
     * Admin can manages all the users, travel plan, subscription etc.
+    * SSLCommerz payment gateway for payment.
+
+## Technology Stack:
+
+    * Typescript
+    * Next Js
+    * ShadCn Ui
+    * Tailwind Css
 
 ## Project Setup and Requirement
 
@@ -25,6 +33,7 @@ git clone git@github.com:mdselimme/Travel-Buddy-Website-Client-NextJs-Tailwind-S
 ```env
 
 NEXT_PUBLIC_BASE_API_URL=
+JWT_ACCESS_TOKEN_SECRET=
 
 ```
 
