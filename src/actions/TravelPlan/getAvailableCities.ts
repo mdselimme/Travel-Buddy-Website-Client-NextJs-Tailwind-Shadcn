@@ -1,0 +1,15 @@
+"use server";
+import { serverFetch } from "@/lib/serverFetch";
+
+export const getAvailableCities = async () => {
+    try {
+        const response = await serverFetch.get(`/travel-plan/cities`);
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || "Failed to fetch available cities.");
+        }
+        return data.data;
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Error fetching available cities.");
+    }
+};
