@@ -1,6 +1,7 @@
 import FindTravelBuddies from "@/components/modules/Home/FindTravelBuddies";
 import HowItWork from "@/components/modules/Home/HowItWork";
 import MyMatchesTravelPlan from "@/components/modules/Home/MyMatchesTravelPlan";
+import WhyChooseUs from "@/components/modules/Home/WhyChooseUs";
 
 const HomePage = () => {
   return (
@@ -8,6 +9,7 @@ const HomePage = () => {
       <FindTravelBuddies />
       <MyMatchesTravelPlan />
       <HowItWork />
+      <WhyChooseUs />
     </div>
   );
 };
