@@ -6,31 +6,112 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { getInitials } from "@/types/formatter";
 import { IProfile } from "@/types/profile.types";
+import { ITravelType } from "@/types/travel.type";
 import { IUser } from "@/types/user.types";
 import { BadgeCheck, Camera, Loader2, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import z from "zod";
 
 interface MyProfileProps {
   profileData: IProfile;
   userInfo: IUser;
+  travelTypes: ITravelType[];
 }
 
-const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
+export const profileFormSchema = z.object({
+  userId: z.string({ error: "User ID must be a string of objectId" }),
+  fullName: z
+    .string()
+    .min(3, "Full name must be at least 3 characters long")
+    .optional(),
+  contactNumber: z
+    .string()
+    .length(11, { message: "Phone number must be exactly 11 digits" })
+    .regex(/^01\d{9}$/, {
+      message:
+        "Invalid Bangladeshi phone number. It must start with '01' and be exactly 11 digits long.",
+    })
+    .optional(),
+  address: z.string({ error: "address must be a string" }).optional(),
+  visitedPlaces: z
+    .string({ error: "visited places must be a string array" })
+    .optional(),
+  currentLocation: z
+    .string({ error: "current location must be a string" })
+    .optional(),
+  interests: z
+    .array(
+      z.string({ error: "interests must be a string array & Valid Object Id" })
+    )
+    .optional(),
+  bio: z.string({ error: "bio must be a string" }).optional(),
+});
+
+type ProfileFormData = z.infer<typeof profileFormSchema>;
+
+const MyProfile = ({ profileData, userInfo, travelTypes }: MyProfileProps) => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const initialInterests = profileData?.interests || [];
+
+  const initialInterestNames =
+    profileData?.interests
+      ?.map((interestId) => {
+        const travelType = travelTypes.find((t) => t._id === interestId);
+        return travelType?.typeName;
+      })
+      .filter((name): name is string => Boolean(name)) || [];
+
+  const [selectedInterests, setSelectedInterests] =
+    useState<string[]>(initialInterestNames);
+
+  const [selectedInterestIds, setSelectedInterestIds] =
+    useState<string[]>(initialInterests);
+
+  const form = useForm<ProfileFormData>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      userId: profileData.user,
+      fullName: profileData?.fullName || "",
+      contactNumber: profileData?.contactNumber || "",
+      address: profileData?.address || "",
+      currentLocation: profileData?.currentLocation || "",
+      visitedPlaces: profileData?.visitedPlaces?.join(", ") || "",
+      interests: profileData?.interests || [],
+      bio: profileData?.bio || "",
+    },
+  });
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
@@ -39,27 +120,55 @@ const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleAddInterest = (travelTypeId: string) => {
+    if (travelTypeId && !selectedInterestIds.includes(travelTypeId)) {
+      const travelType = travelTypes?.find((t) => t._id === travelTypeId);
+      if (travelType) {
+        setSelectedInterestIds([...selectedInterestIds, travelTypeId]);
+        setSelectedInterests([...selectedInterests, travelType.typeName]);
+        form.setValue("interests", [...selectedInterestIds, travelTypeId]);
+      }
+    }
+  };
+
+  const handleRemoveInterest = (typeName: string) => {
+    const index = selectedInterests.indexOf(typeName);
+    if (index > -1) {
+      const updatedNames = selectedInterests.filter((i) => i !== typeName);
+      const updatedIds = selectedInterestIds.filter((_, i) => i !== index);
+      setSelectedInterests(updatedNames);
+      setSelectedInterestIds(updatedIds);
+      form.setValue("interests", updatedIds);
+    }
+  };
+
+  const onSubmit = async (data: ProfileFormData) => {
     try {
-      setError(null);
-      setSuccess(null);
-
-      const formData = new FormData(e.currentTarget);
-
-      startTransition(async () => {
-        const result = await updateUserAction(formData);
-
-        if (result.success) {
-          setSuccess(result.message);
-          setPreviewImage(null);
-          router.refresh();
-        } else {
-          setError(result.message);
-        }
-      });
+      setIsSubmitting(true);
+      const { visitedPlaces, ...restFormData } = data;
+      const updateFormData = {
+        ...restFormData,
+        visitedPlaces: (visitedPlaces as string)
+          .split(",")
+          .map((place) => place.trim())
+          .filter(Boolean),
+        interests: selectedInterestIds,
+      };
+      const formData = new FormData();
+      formData.append("data", JSON.stringify(updateFormData));
+      if (imageFile) {
+        formData.append("file", imageFile);
+      }
+      const result = await updateUserAction(formData);
+      if (result.success) {
+        toast.success(result.message || "Profile updated successfully!");
+        setPreviewImage(null);
+        router.refresh();
+      }
     } catch (error) {
-      setError(error instanceof Error ? error.message : "User update failed");
+      toast.error(error instanceof Error ? error.message : "An error occurred");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -73,7 +182,7 @@ const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Profile Card */}
           <Card className="lg:col-span-1">
@@ -106,11 +215,10 @@ const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
                   <Input
                     type="file"
                     id="file"
-                    name="file"
                     accept="image/*"
                     className="hidden"
                     onChange={handleImageChange}
-                    disabled={isPending}
+                    disabled={isSubmitting}
                   />
                 </label>
               </div>
@@ -184,127 +292,215 @@ const MyProfile = ({ profileData, userInfo }: MyProfileProps) => {
               <CardTitle>Personal Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {error && (
-                <div className="bg-destructive/10 text-destructive px-4 py-3 rounded-md text-sm">
-                  {error}
-                </div>
-              )}
-
-              {success && (
-                <div className="bg-green-500/10 text-green-600 px-4 py-3 rounded-md text-sm">
-                  {success}
-                </div>
-              )}
-
-              <div className="grid gap-4 md:grid-cols-2">
-                {/* Common Fields for All Roles */}
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    defaultValue={profileData?.fullName || profileData.fullName}
-                    required
-                    disabled={isPending}
+              <Form {...form}>
+                <div className="grid gap-4 md:grid-cols-2">
+                  {/* Full Name */}
+                  <FormField
+                    control={form.control}
+                    name="fullName"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Full Name</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your full name"
+                            {...field}
+                            disabled={isSubmitting}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={profileData?.email || profileData.email}
-                    disabled
-                    className="bg-muted"
-                  />
-                </div>
+                  {/* Email (Read-only) */}
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={profileData?.email || ""}
+                      disabled
+                      className="bg-muted"
+                    />
+                  </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="contactNumber">Contact Number</Label>
-                  <Input
-                    id="contactNumber"
+                  {/* Contact Number */}
+                  <FormField
+                    control={form.control}
                     name="contactNumber"
-                    defaultValue={profileData?.contactNumber || ""}
-                    required
-                    disabled={isPending}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Contact Number</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your contact number"
+                            {...field}
+                            disabled={isSubmitting}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="address">Address</Label>
-                  <Input
-                    id="address"
+                  {/* Address */}
+                  <FormField
+                    control={form.control}
                     name="address"
-                    defaultValue={profileData?.address || ""}
-                    disabled={isPending}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your address"
+                            {...field}
+                            disabled={isSubmitting}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="currentLocation">Current Location</Label>
-                  <Input
-                    id="currentLocation"
+                  {/* Current Location */}
+                  <FormField
+                    control={form.control}
                     name="currentLocation"
-                    defaultValue={profileData?.currentLocation || ""}
-                    disabled={isPending}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Current Location</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your current location"
+                            {...field}
+                            disabled={isSubmitting}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="visitedPlaces">
-                    Visited Places (Separated with commas more than one)
-                  </Label>
-                  <Input
-                    id="visitedPlaces"
+                  {/* Visited Places */}
+                  <FormField
+                    control={form.control}
                     name="visitedPlaces"
-                    defaultValue={profileData?.visitedPlaces?.join(", ") || ""}
-                    disabled={isPending}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Visited Places</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Separate with commas"
+                            {...field}
+                            disabled={isSubmitting}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="interests">
-                    Interests (Separated with commas more than one)
-                  </Label>
-                  <Input
-                    id="interests"
+                  {/* Travel Type Interests */}
+                  <FormField
+                    control={form.control}
                     name="interests"
-                    defaultValue={profileData?.interests?.join(", ") || ""}
-                    disabled={isPending}
-                  />
-                </div>
+                    render={() => (
+                      <FormItem className="md:col-span-2">
+                        <FormLabel>Travel Type Interests</FormLabel>
+                        <Select onValueChange={handleAddInterest}>
+                          <FormControl>
+                            <SelectTrigger disabled={isSubmitting}>
+                              <SelectValue placeholder="Select travel type interests" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {travelTypes?.map((type: ITravelType) => (
+                              <SelectItem
+                                key={type._id}
+                                value={type._id}
+                                disabled={selectedInterestIds.includes(
+                                  type._id
+                                )}
+                              >
+                                {type.typeName}
+                                {selectedInterestIds.includes(type._id) && " ✓"}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
 
-                <div className="space-y-2">
-                  <Label htmlFor="bio">Bio</Label>
-                  <Textarea
-                    id="bio"
+                        {/* Selected Interests Tags */}
+                        {selectedInterests.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                            {selectedInterests.map((interest) => (
+                              <div
+                                key={interest}
+                                className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm flex items-center gap-2 font-medium"
+                              >
+                                {interest}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveInterest(interest)}
+                                  className="hover:opacity-70 font-bold text-lg leading-none"
+                                  title="Remove this interest"
+                                >
+                                  ×
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {selectedInterests.length === 0 && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            No interests selected yet.
+                          </p>
+                        )}
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Bio */}
+                  <FormField
+                    control={form.control}
                     name="bio"
-                    defaultValue={profileData?.bio || ""}
-                    disabled={isPending}
+                    render={({ field }) => (
+                      <FormItem className="md:col-span-2">
+                        <FormLabel>Bio</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Tell us about yourself"
+                            {...field}
+                            disabled={isSubmitting}
+                            className="resize-none"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
                   />
                 </div>
-              </div>
 
-              <div className="flex justify-end pt-4">
-                <Button
-                  type="submit"
-                  className="text-secondary"
-                  disabled={isPending}
-                >
-                  {isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="mr-2 h-4 w-4" />
-                      Save Changes
-                    </>
-                  )}
-                </Button>
-              </div>
+                <div className="flex justify-end pt-4">
+                  <Button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="text-secondary"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Updating...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        Save Changes
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </Form>
             </CardContent>
           </Card>
         </div>
