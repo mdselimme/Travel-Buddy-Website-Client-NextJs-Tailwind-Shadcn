@@ -50,7 +50,7 @@ const FindTravelBuddiesForm = ({ cities }: FindTravelBuddiesFormProps) => {
         <Link href={exploreLink} className="w-full">
           <Button
             size="lg"
-            className="bg-white text-cyan-600 hover:bg-blue-50 text-base font-semibold w-full"
+            className="bg-white text-cyan-600 hover:bg-blue-50 text-base font-semibold w-full cursor-pointer"
           >
             Find Buddies
           </Button>

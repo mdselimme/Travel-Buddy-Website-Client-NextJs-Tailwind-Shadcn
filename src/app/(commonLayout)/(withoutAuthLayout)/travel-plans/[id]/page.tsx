@@ -6,10 +6,14 @@ import RequestToJoinButton from "@/components/modules/TravelPlan/RequestToJoinBu
 import Image from "next/image";
 import React from "react";
 import { getProfileByUserId } from "@/actions/profile/getProfileByUserId";
+import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
+import { ITravelType } from "@/types/travel.type";
 
 const TravelPlanDetails = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
   const travelPlan = await getTravelPlanById(id);
+  const { data: allTravelTypes } = await getAllTravelType();
+
   const hostProfile = travelPlan
     ? await getProfileByUserId(travelPlan.user)
     : null;
@@ -56,7 +60,12 @@ const TravelPlanDetails = async ({ params }: { params: { id: string } }) => {
 
         {/* Right Sidebar */}
         <div className="space-y-6">
-          {hostProfile && <HostProfileCard profile={hostProfile} />}
+          {hostProfile && (
+            <HostProfileCard
+              profile={hostProfile}
+              allTravelTypes={allTravelTypes as ITravelType[]}
+            />
+          )}
 
           <RequestToJoinButton
             travelPlanId={travelPlan._id}

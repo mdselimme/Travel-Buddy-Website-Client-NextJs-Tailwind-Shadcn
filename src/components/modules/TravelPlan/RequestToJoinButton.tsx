@@ -3,6 +3,11 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { getCookie } from "@/lib/tokenHandlers";
+import { getUserInfo } from "@/actions/user/getUserInfo";
+import { requestMatchAction } from "@/actions/matches/requestMatch";
+import { toast } from "sonner";
 
 interface RequestToJoinButtonProps {
   travelPlanId: string;
@@ -17,27 +22,42 @@ export default function RequestToJoinButton({
 }: RequestToJoinButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
+  const router = useRouter();
 
   const handleRequestToJoin = async () => {
     setIsLoading(true);
+    const accessToken = await getCookie("accessToken");
     try {
-      // TODO: Implement request to join action
-      console.log(
-        "Requesting to join plan:",
+      if (!accessToken) {
+        router.push("/login");
+        return;
+      }
+
+      const user = await getUserInfo();
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const matchesData = {
         travelPlanId,
-        "from host:",
-        hostId
-      );
+        senderId: user._id as string,
+        receiverId: hostId as string,
+      };
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setIsRequested(true);
+      const result = await requestMatchAction(matchesData);
+      console.log({ result });
+      if (result.success) {
+        toast.success(result.message || "Request sent successfully!");
+        setIsRequested(true);
+      }
       if (onSuccess) {
         onSuccess();
       }
     } catch (error) {
-      console.error("Request failed:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to send request."
+      );
     } finally {
       setIsLoading(false);
     }

@@ -54,7 +54,7 @@ export function LoginForm({
     };
     try {
       const result = await authLogIn(logInData);
-      console.log(redirect);
+
       toast.success(result.message || "Logged in successfully.");
       const requestedPath = redirect || getDefaultDashboardRoute(result.role);
       if (!result?.data?.isProfileCompleted) {

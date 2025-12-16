@@ -4,7 +4,7 @@ import { serverFetch } from "@/lib/serverFetch";
 import { IMatch } from "@/types/matches.types"
 
 
-export const requestMatchAction = async (matchData: IMatch) => {
+export const requestMatchAction = async (matchData: Partial<IMatch>) => {
     try {
         const response = await serverFetch.post("/matches/create", {
             body: JSON.stringify(matchData),

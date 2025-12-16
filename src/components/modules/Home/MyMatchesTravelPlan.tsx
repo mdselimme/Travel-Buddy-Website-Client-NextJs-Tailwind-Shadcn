@@ -30,8 +30,6 @@ const MyMatchesTravelPlan = async () => {
     travelPlans = allPlans?.slice(0, 3) || [];
   }
 
-  console.log({ travelPlans });
-
   if (travelPlans.length === 0) {
     return (
       <div className="text-center py-12">
@@ -116,7 +114,10 @@ const MyMatchesTravelPlan = async () => {
 
               {/* View Details Button */}
               <Link href={`/travel-plans/${plan._id}`} className="block">
-                <Button variant="default" className="w-full text-secondary">
+                <Button
+                  variant="default"
+                  className="w-full text-secondary cursor-pointer"
+                >
                   View Details
                 </Button>
               </Link>

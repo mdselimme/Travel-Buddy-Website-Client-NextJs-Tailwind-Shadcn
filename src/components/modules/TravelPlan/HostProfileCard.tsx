@@ -7,12 +7,22 @@ import { Separator } from "@/components/ui/separator";
 import { IProfile } from "@/types/profile.types";
 import { Mail, Phone, MapPin, Star } from "lucide-react";
 import Image from "next/image";
+import { ITravelType } from "@/types/travel.type";
 
 interface HostProfileCardProps {
   profile: IProfile;
+  allTravelTypes: ITravelType[];
 }
 
-export default function HostProfileCard({ profile }: HostProfileCardProps) {
+export default function HostProfileCard({
+  profile,
+  allTravelTypes,
+}: HostProfileCardProps) {
+  const getTravelTypeName = (typeId: string) => {
+    const travelType = allTravelTypes.find((type) => type._id === typeId);
+    return travelType ? travelType.typeName : "Unknown";
+  };
+
   return (
     <Card className="p-6 bg-white">
       <h3 className="text-xl font-bold mb-4">Host Profile</h3>
@@ -106,7 +116,7 @@ export default function HostProfileCard({ profile }: HostProfileCardProps) {
           <div className="flex flex-wrap gap-2">
             {profile.interests.slice(0, 5).map((interest, index) => (
               <Badge key={index} variant="secondary">
-                {interest}
+                {getTravelTypeName(interest)}
               </Badge>
             ))}
             {profile.interests.length > 5 && (
