@@ -20,7 +20,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Eye, Edit, Trash2, MoreHorizontal } from "lucide-react";
+import {
+  Eye,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  Settings2,
+  Star,
+} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -34,11 +41,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditTravelPlanModal from "./EditTravelPlanModal";
 import ViewTravelPlanModal from "./ViewTravelPlanModal";
+import ReviewModal from "./ReviewModal";
 import { deleteTravelPlanAction } from "@/actions/TravelPlan/deleteTravelPlan";
 
 interface TravelPlanTableProps {
   plans: ITravelPlan[];
   travelTypes?: ITravelType[];
+  userId: string;
   onDelete?: (planId: string) => Promise<void>;
   onUpdate?: (planId: string, data: any) => Promise<void>;
 }
@@ -48,6 +57,7 @@ export default function TravelPlanTable({
   travelTypes = [],
   onDelete,
   onUpdate,
+  userId,
 }: TravelPlanTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -55,6 +65,8 @@ export default function TravelPlanTable({
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [viewingPlan, setViewingPlan] = useState<ITravelPlan | null>(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [reviewingPlan, setReviewingPlan] = useState<ITravelPlan | null>(null);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
   const getStatusBadge = (status: TravelPlanStatus) => {
     const statusConfig = {
@@ -160,22 +172,50 @@ export default function TravelPlanTable({
                         <Eye className="w-4 h-4 mr-2" />
                         View
                       </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setEditingPlan(plan);
-                          setEditModalOpen(true);
-                        }}
-                      >
-                        <Edit className="w-4 h-4 mr-2" />
-                        Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() => setDeleteId(plan._id)}
-                        className="text-destructive focus:text-destructive"
-                      >
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        Delete
-                      </DropdownMenuItem>
+
+                      {/* Show manage, edit, delete only if userId matches plan.user */}
+                      {userId === plan.user && (
+                        <>
+                          <DropdownMenuItem>
+                            <Link href={`/dashboard/my-plans/${plan._id}`}>
+                              <span className="flex items-center">
+                                <Settings2 className="w-4 h-4 mr-2" />
+                                Manage
+                              </span>
+                            </Link>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setEditingPlan(plan);
+                              setEditModalOpen(true);
+                            }}
+                          >
+                            <Edit className="w-4 h-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setDeleteId(plan._id)}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </>
+                      )}
+
+                      {/* Show review option if plan is completed and userId matches plan.user */}
+                      {plan.travelPlanStatus === TravelPlanStatus.COMPLETED &&
+                        userId === plan.user && (
+                          <DropdownMenuItem
+                            onClick={() => {
+                              setReviewingPlan(plan);
+                              setReviewModalOpen(true);
+                            }}
+                          >
+                            <Star className="w-4 h-4 mr-2" />
+                            Leave Review
+                          </DropdownMenuItem>
+                        )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -229,6 +269,15 @@ export default function TravelPlanTable({
         plan={viewingPlan}
         open={viewModalOpen}
         onOpenChange={setViewModalOpen}
+      />
+
+      {/* Review Modal */}
+      <ReviewModal
+        plan={reviewingPlan}
+        open={reviewModalOpen}
+        onOpenChange={setReviewModalOpen}
+        arrangedBy={userId}
+        traveler={userId}
       />
     </>
   );

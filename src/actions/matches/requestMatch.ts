@@ -16,7 +16,7 @@ export const requestMatchAction = async (matchData: Partial<IMatch>) => {
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Failed to request match.");
         }
-        return data.data;
+        return data;
     }
     catch (error) {
         console.log("Error in requestMatchAction:", error);

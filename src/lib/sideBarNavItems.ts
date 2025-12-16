@@ -99,6 +99,12 @@ const userNavItems: NavSection[] = [
                 roles: ["USER"],
             },
             {
+                title: 'My Matches',
+                href: '/dashboard/my-matches',
+                icon: 'Users',
+                roles: ["USER"],
+            },
+            {
                 title: "My Subscriptions",
                 href: "/dashboard/my-subscriptions",
                 icon: "Box",

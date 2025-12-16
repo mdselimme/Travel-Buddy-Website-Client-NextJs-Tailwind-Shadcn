@@ -1,10 +1,12 @@
 import { getProfileByUserId } from "@/actions/profile/getProfileByUserId";
 import React from "react";
 import ProfileDisplay from "../../../../../components/modules/Profile/ProfileDisplay";
+import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 
 const ProfileDetailsPage = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
   const profile = await getProfileByUserId(id);
+  const travelTypes = await getAllTravelType();
 
   if (!profile) {
     return (
@@ -22,7 +24,7 @@ const ProfileDetailsPage = async ({ params }: { params: { id: string } }) => {
     );
   }
 
-  return <ProfileDisplay profile={profile} />;
+  return <ProfileDisplay profile={profile} travelTypes={travelTypes.data} />;
 };
 
 export default ProfileDetailsPage;

@@ -275,7 +275,7 @@ const MyProfile = ({ profileData, userInfo, travelTypes }: MyProfileProps) => {
                     <p className="bg-destructive text-secondary px-5 py-2 rounded-full text-sm text-destructive-foreground mt-2 inline-block">
                       No active subscription
                     </p>
-                    <Link href="/dashboard/subscription">
+                    <Link href="/dashboard/my-subscriptions">
                       <Button className="mt-3 text-secondary">
                         Manage Subscription
                       </Button>

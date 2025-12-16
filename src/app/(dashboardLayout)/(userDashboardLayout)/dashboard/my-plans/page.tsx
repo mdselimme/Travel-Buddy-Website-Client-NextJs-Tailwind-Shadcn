@@ -1,8 +1,10 @@
 import { getMyTravelPlans } from "@/actions/TravelPlan/getMyTravelPlans";
+import { getUserInfo } from "@/actions/user/getUserInfo";
 import TravelPlanTable from "@/components/modules/TravelPlan/TravelPlanTable";
 
 const MyPlansPage = async () => {
   const myTravelPlans = await getMyTravelPlans();
+  const user = await getUserInfo();
 
   return (
     <div>
@@ -15,7 +17,10 @@ const MyPlansPage = async () => {
         </div>
       </div>
 
-      <TravelPlanTable plans={myTravelPlans || []} />
+      <TravelPlanTable
+        plans={myTravelPlans || []}
+        userId={user?._id as string}
+      />
     </div>
   );
 };

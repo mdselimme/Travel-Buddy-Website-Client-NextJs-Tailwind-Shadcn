@@ -2,6 +2,7 @@
 
 import { serverFetch } from "@/lib/serverFetch";
 import { MatchStatus } from "@/types/matches.types";
+import { revalidateTag } from "next/cache";
 
 interface IMatchStatusUpdate {
     matchId: string;
@@ -21,7 +22,8 @@ export const matchStatusUpdateAction = async ({ matchId, status }: IMatchStatusU
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Failed to update match status.");
         }
-        return data.data;
+        revalidateTag("my-matches", { expire: 0 });
+        return data;
     }
     catch (error) {
         console.log("Error in matchStatusUpdateAction:", error);

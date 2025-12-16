@@ -5,12 +5,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Mail, Phone, MapIcon, Calendar, Heart } from "lucide-react";
 import Image from "next/image";
+import { ITravelType } from "@/types/travel.type";
 
 interface ProfileDisplayProps {
   profile: IProfile;
+  travelTypes: ITravelType[];
 }
 
-export default function ProfileDisplay({ profile }: ProfileDisplayProps) {
+export default function ProfileDisplay({
+  profile,
+  travelTypes,
+}: ProfileDisplayProps) {
+  console.log({ travelTypes });
+
+  // Filter travel types to only show those matching user interests
+  const matchedTravelTypes = travelTypes.filter((type) =>
+    profile.interests?.includes(type._id)
+  );
+
   const formatDate = (date: string | Date | undefined) => {
     if (!date) return "N/A";
     return new Date(date).toLocaleDateString("en-US", {
@@ -107,23 +119,23 @@ export default function ProfileDisplay({ profile }: ProfileDisplayProps) {
         </Card>
       )}
 
-      {/* Interests Section */}
-      {profile.interests && profile.interests.length > 0 && (
+      {/* Travel Types Section - Filtered by Interests */}
+      {matchedTravelTypes && matchedTravelTypes.length > 0 && (
         <Card className="mb-6">
           <CardHeader>
             <div className="flex items-center gap-2">
               <Heart className="w-5 h-5 text-red-500" />
-              <CardTitle>Interests</CardTitle>
+              <CardTitle>Travel Types & Interests</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {profile.interests.map((interest, index) => (
+              {matchedTravelTypes.map((travelType) => (
                 <Badge
-                  key={index}
+                  key={travelType._id}
                   className="bg-purple-500 text-white hover:bg-purple-600"
                 >
-                  {interest}
+                  {travelType.typeName}
                 </Badge>
               ))}
             </div>

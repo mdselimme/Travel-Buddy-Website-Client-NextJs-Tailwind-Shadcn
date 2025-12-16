@@ -6,9 +6,16 @@ export enum MatchStatus {
     REJECTED = "REJECTED",
 };
 
+
+export interface TravelPlanId {
+    _id: string
+    travelTitle: string
+}
+
+
 export interface IMatch {
     _id: string;
-    travelPlanId: string;
+    travelPlanId: TravelPlanId;
     senderId: string;
     receiverId: string;
     status: MatchStatus;
