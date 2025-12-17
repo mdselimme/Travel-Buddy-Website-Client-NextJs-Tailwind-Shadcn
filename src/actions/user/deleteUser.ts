@@ -1,6 +1,7 @@
 "use server";
 
 import { serverFetch } from "@/lib/serverFetch";
+import { revalidateTag } from "next/cache";
 
 export const deleteUserAction = async (userId: string) => {
     try {
@@ -12,7 +13,9 @@ export const deleteUserAction = async (userId: string) => {
             throw new Error(data.message || "User not deleted.")
         };
 
-        return data.message || "User deleted successfully."
+        revalidateTag("users", { expire: 0 });
+
+        return data;
     } catch (error) {
         throw new Error(error instanceof Error ? error.message : "User not deleted.")
     }

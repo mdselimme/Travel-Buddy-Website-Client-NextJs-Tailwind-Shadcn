@@ -5,8 +5,10 @@ export interface IReview {
     arrangedBy: string;
     travelPlan: string,
     traveler: string,
-    rating: number;
-    description: string;
+    arrangedByDescription?: string;
+    arrangedByRating?: number;
+    travelerRating?: number;
+    travelerByDescription?: string;
     createdAt?: Date;
     updatedAt?: Date;
 };

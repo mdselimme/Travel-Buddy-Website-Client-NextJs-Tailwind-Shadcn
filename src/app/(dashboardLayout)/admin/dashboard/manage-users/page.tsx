@@ -15,7 +15,7 @@ const ManageUser = async () => {
 
       {/* Users Table */}
       <div className="mt-10">
-        <ManageUsersTable users={allUsers.data} />
+        <ManageUsersTable initialUsers={allUsers.data} />
       </div>
     </div>
   );

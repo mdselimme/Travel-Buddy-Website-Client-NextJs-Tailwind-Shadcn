@@ -1,3 +1,4 @@
+import { TravelPlanStatus } from "./travel.plan.types";
 
 
 export enum MatchStatus {
@@ -9,7 +10,9 @@ export enum MatchStatus {
 
 export interface TravelPlanId {
     _id: string
-    travelTitle: string
+    travelTitle: string;
+    travelPlanStatus: TravelPlanStatus
+    user: string;
 }
 
 

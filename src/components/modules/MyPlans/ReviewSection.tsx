@@ -30,11 +30,11 @@ const createReviewZodSchema = z.object({
   traveler: z.string({
     message: "Traveler is required & must be an ObjectId.",
   }),
-  rating: z
+  arrangedByRating: z
     .number({ message: "Rating is required" })
     .min(1, "Rating must be at least 1")
     .max(5, "Rating must be at most 5"),
-  description: z
+  arrangedByDescription: z
     .string({ message: "Description is required" })
     .min(10, "Description must be at least 10 characters long"),
 });
@@ -54,6 +54,7 @@ export default function ReviewSection({
   arrangedBy,
   traveler,
 }: ReviewSectionProps) {
+  console.log({ travelPlanId, arrangedBy, traveler });
   const [hoverRating, setHoverRating] = useState<number>(0);
 
   const form = useForm<CreateReviewInput>({
@@ -62,8 +63,8 @@ export default function ReviewSection({
       arrangedBy: arrangedBy,
       travelPlan: travelPlanId,
       traveler: traveler,
-      rating: 0,
-      description: "",
+      arrangedByRating: 0,
+      arrangedByDescription: "",
     },
   });
 
@@ -72,6 +73,7 @@ export default function ReviewSection({
   }
 
   const onSubmit = async (data: CreateReviewInput) => {
+    console.log({ data });
     try {
       const result = await createReviewAction(data);
 
@@ -100,7 +102,7 @@ export default function ReviewSection({
             {/* Star Rating Field */}
             <FormField
               control={form.control}
-              name="rating"
+              name="arrangedByRating"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold">
@@ -141,7 +143,7 @@ export default function ReviewSection({
             {/* Description Field */}
             <FormField
               control={form.control}
-              name="description"
+              name="arrangedByDescription"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold">

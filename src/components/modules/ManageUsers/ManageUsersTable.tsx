@@ -32,6 +32,7 @@ import EditUserModal from "./EditUserModal";
 import Link from "next/link";
 import { ActiveStatus } from "@/types/user.types";
 import { UserRole } from "@/types/auth.types";
+import { deleteUserAction } from "@/actions/user/deleteUser";
 
 interface UserProfile {
   _id?: string;
@@ -53,7 +54,7 @@ interface User {
 }
 
 interface ManageUsersTableProps {
-  users: User[];
+  initialUsers: User[];
 }
 
 const getRoleBadge = (role: string) => {
@@ -79,9 +80,8 @@ const getStatusBadge = (isActive: string, isVerified: boolean) => {
 };
 
 export default function ManageUsersTable({
-  users: initialUsers,
+  initialUsers,
 }: ManageUsersTableProps) {
-  const [users, setUsers] = useState<User[]>(initialUsers);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -92,10 +92,10 @@ export default function ManageUsersTable({
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      // TODO: Implement delete user action
-      console.log("Deleting user:", deleteId);
-      setUsers(users.filter((user) => user._id !== deleteId));
-      setDeleteId(null);
+      const result = await deleteUserAction(deleteId);
+      if (result.success) {
+        setDeleteId(null);
+      }
     } catch (error) {
       console.error("Delete failed:", error);
     } finally {
@@ -116,24 +116,6 @@ export default function ManageUsersTable({
     if (!editingUser) return;
     setIsUpdating(true);
     try {
-      // TODO: Implement update user action
-      console.log("Updating user:", editingUser._id, formData);
-
-      setUsers(
-        users.map((user) =>
-          user._id === editingUser._id
-            ? {
-                ...user,
-                role: formData.role as UserRole,
-                isActive: formData.isActive as ActiveStatus,
-                profile: {
-                  ...user.profile,
-                  fullName: formData.fullName,
-                },
-              }
-            : user
-        )
-      );
       setEditModalOpen(false);
       setEditingUser(null);
     } catch (error) {
@@ -160,8 +142,8 @@ export default function ManageUsersTable({
             </TableRow>
           </TableHeader>
           <TableBody className="bg-white">
-            {users && users.length > 0 ? (
-              users.map((user: User) => (
+            {initialUsers && initialUsers.length > 0 ? (
+              initialUsers.map((user: User) => (
                 <TableRow key={user._id} className="hover:bg-secondary/30">
                   {/* Profile Image and Name */}
                   <TableCell>

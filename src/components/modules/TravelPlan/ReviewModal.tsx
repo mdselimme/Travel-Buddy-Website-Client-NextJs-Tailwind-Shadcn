@@ -6,11 +6,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { ITravelPlan } from "@/types/travel.plan.types";
 import ReviewSection from "../MyPlans/ReviewSection";
+import { IMatch } from "@/types/matches.types";
 
 interface ReviewModalProps {
-  plan: ITravelPlan | null;
+  plan: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   arrangedBy: string;
@@ -31,11 +31,11 @@ export default function ReviewModal({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            Leave a Review for &quot;{plan.travelTitle}&quot;
+            Leave a Review for &quot;{matches.travelPlanId.travelTitle}&quot;
           </DialogTitle>
         </DialogHeader>
         <ReviewSection
-          travelPlanId={plan._id}
+          travelPlanId={matches.travelPlanId._id as string}
           isCompleted={true}
           arrangedBy={arrangedBy}
           traveler={traveler}
