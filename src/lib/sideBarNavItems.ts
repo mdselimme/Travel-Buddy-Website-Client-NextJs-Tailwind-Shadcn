@@ -115,6 +115,12 @@ const userNavItems: NavSection[] = [
                 href: "/dashboard/create-plan",
                 icon: "PlusCircle",
                 roles: ["USER"],
+            },
+            {
+                title: "My Reviews",
+                href: "/dashboard/my-reviews",
+                icon: "Star",
+                roles: ["USER"],
             }
         ]
     }
