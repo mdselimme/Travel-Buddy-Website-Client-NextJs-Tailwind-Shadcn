@@ -1,9 +1,7 @@
 "use server"
-
 import { serverFetch } from "@/lib/serverFetch";
 import { IReview } from "@/types/review.types"
 import { revalidateTag } from "next/cache";
-
 
 export const updateReviewAction = async (reviewId: string, reviewData: Partial<IReview>) => {
     try {

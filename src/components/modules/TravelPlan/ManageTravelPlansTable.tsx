@@ -27,7 +27,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ITravelPlan, TravelPlanStatus } from "@/types/travel.plan.types";
-import { Eye, Edit, Trash2, MoreHorizontal } from "lucide-react";
+import { Eye, Trash2, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
 interface ManageTravelPlansTableProps {
@@ -37,7 +37,7 @@ interface ManageTravelPlansTableProps {
 const formatDate = (date: Date | string | undefined) => {
   if (!date) return "N/A";
   const d = new Date(date);
-  return d.toLocaleDateString("en-US", {
+  return d.toLocaleDateString("en-BD", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -128,15 +128,6 @@ export default function ManageTravelPlansTable({
                             <Eye className="w-4 h-4 mr-2" />
                             View Details
                           </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onClick={() => {
-                            // TODO: Implement edit functionality
-                            console.log("Edit plan:", plan._id);
-                          }}
-                        >
-                          <Edit className="w-4 h-4 mr-2" />
-                          Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => setDeleteId(plan._id)}
