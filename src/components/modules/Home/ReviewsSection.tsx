@@ -58,9 +58,9 @@ const ReviewsSection = async () => {
               {displayedReviews.map((review) => {
                 // Determine which user left the review and their rating/description
                 const reviewerName = review?.traveler.profile.fullName;
-                const reviewName = review?.arrangedBy.profile.fullName;
-                const rating = review?.arrangedByRating;
-                const description = review?.arrangedByDescription;
+                const reviewName = review?.user.profile.fullName;
+                const rating = review?.rating;
+                const description = review?.description;
 
                 return (
                   <Card
@@ -89,7 +89,7 @@ const ReviewsSection = async () => {
                       </p>
                       <div className="mt-4 pt-4 border-t border-gray-100">
                         <p className="text-xs text-gray-400">
-                          {formatDate(review.createdAt)}
+                          {formatDate(review?.createdAt as string)}
                         </p>
                         <p className="text-sm text-gray-600 mt-1">
                           Trip: {review.travelPlan.travelTitle}

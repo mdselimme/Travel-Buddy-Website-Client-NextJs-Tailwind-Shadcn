@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { IMatch, MatchStatus } from "@/types/matches.types";
 import { TravelPlanStatus } from "@/types/travel.plan.types";
 import {
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Star } from "lucide-react";
+import { Eye } from "lucide-react";
 import Link from "next/link";
 import MyMatchesReviewModal from "./MyMatchesReviewModal";
 
@@ -26,8 +25,6 @@ export default function MyMatchesTable({
   matches,
   userId,
 }: MyMatchesTableProps) {
-  const [reviewingMatch, setReviewingMatch] = useState<IMatch | null>(null);
-  const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const getStatusColor = (status: MatchStatus) => {
     switch (status) {
       case MatchStatus.ACCEPTED:
@@ -58,6 +55,9 @@ export default function MyMatchesTable({
               Travel Title
             </TableHead>
             <TableHead className="font-semibold text-gray-700">
+              Match With
+            </TableHead>
+            <TableHead className="font-semibold text-gray-700">
               Match Status
             </TableHead>
             <TableHead className="text-right font-semibold text-gray-700">
@@ -74,6 +74,13 @@ export default function MyMatchesTable({
               {/* Travel Title */}
               <TableCell className="font-medium">
                 {match.travelPlanId?.travelTitle || "N/A"}
+              </TableCell>
+
+              {/* Match With - Show the other person's name */}
+              <TableCell className="font-medium">
+                {userId === match.receiverId._id
+                  ? match.senderId?.profile?.fullName || "N/A"
+                  : match.receiverId?.profile?.fullName || "N/A"}
               </TableCell>
 
               {/* Match Status */}
@@ -96,33 +103,14 @@ export default function MyMatchesTable({
                 {match.travelPlanId &&
                   match.travelPlanId.travelPlanStatus ===
                     TravelPlanStatus.COMPLETED &&
-                  userId === match.senderId && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="gap-2"
-                      onClick={() => {
-                        setReviewingMatch(match);
-                        setReviewModalOpen(true);
-                      }}
-                    >
-                      <Star className="w-4 h-4" />
-                      Leave Review
-                    </Button>
+                  userId === match.senderId._id && (
+                    <MyMatchesReviewModal match={match} userId={userId} />
                   )}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
-      {/* Review Modal */}
-      <MyMatchesReviewModal
-        match={reviewingMatch}
-        open={reviewModalOpen}
-        onOpenChange={setReviewModalOpen}
-        userId={userId}
-      />
     </div>
   );
 }

@@ -20,14 +20,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Eye,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-  Settings2,
-  Star,
-} from "lucide-react";
+import { Eye, Edit, Trash2, MoreHorizontal, Settings2 } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -41,7 +34,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditTravelPlanModal from "./EditTravelPlanModal";
 import ViewTravelPlanModal from "./ViewTravelPlanModal";
-import ReviewModal from "./ReviewModal";
 import { deleteTravelPlanAction } from "@/actions/TravelPlan/deleteTravelPlan";
 
 interface TravelPlanTableProps {
@@ -65,8 +57,6 @@ export default function TravelPlanTable({
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [viewingPlan, setViewingPlan] = useState<ITravelPlan | null>(null);
   const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [reviewingPlan, setReviewingPlan] = useState<ITravelPlan | null>(null);
-  const [reviewModalOpen, setReviewModalOpen] = useState(false);
 
   const getStatusBadge = (status: TravelPlanStatus) => {
     const statusConfig = {
@@ -202,20 +192,6 @@ export default function TravelPlanTable({
                           </DropdownMenuItem>
                         </>
                       )}
-
-                      {/* Show review option if plan is completed and userId matches plan.user */}
-                      {plan.travelPlanStatus === TravelPlanStatus.COMPLETED &&
-                        userId === plan.user && (
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setReviewingPlan(plan);
-                              setReviewModalOpen(true);
-                            }}
-                          >
-                            <Star className="w-4 h-4 mr-2" />
-                            Leave Review
-                          </DropdownMenuItem>
-                        )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
@@ -269,15 +245,6 @@ export default function TravelPlanTable({
         plan={viewingPlan}
         open={viewModalOpen}
         onOpenChange={setViewModalOpen}
-      />
-
-      {/* Review Modal */}
-      <ReviewModal
-        plan={reviewingPlan}
-        open={reviewModalOpen}
-        onOpenChange={setReviewModalOpen}
-        arrangedBy={userId}
-        traveler={userId}
       />
     </>
   );

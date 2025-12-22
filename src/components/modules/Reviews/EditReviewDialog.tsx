@@ -71,14 +71,10 @@ const EditReviewDialog: React.FC<EditReviewDialogProps> = ({
   const form = useForm<UpdateReviewFormValues>({
     resolver: zodResolver(updateReviewZodSchema),
     defaultValues: {
-      arrangedByRating: isArrangedBy ? undefined : review.arrangedByRating,
-      arrangedByDescription: isArrangedBy
-        ? undefined
-        : review.arrangedByDescription,
-      travelerRating: isArrangedBy ? review.travelerRating : undefined,
-      travelerDescription: isArrangedBy
-        ? review.travelerDescription
-        : undefined,
+      arrangedByRating: isArrangedBy ? undefined : review.rating,
+      arrangedByDescription: isArrangedBy ? undefined : review.description,
+      travelerRating: isArrangedBy ? review.rating : undefined,
+      travelerDescription: isArrangedBy ? review.description : undefined,
     },
   });
 
@@ -168,7 +164,7 @@ const EditReviewDialog: React.FC<EditReviewDialogProps> = ({
               <p className="text-sm text-muted-foreground">
                 {isArrangedBy
                   ? review.traveler.profile.fullName
-                  : review.arrangedBy.profile.fullName}
+                  : review.user.profile.fullName}
               </p>
             </div>
 

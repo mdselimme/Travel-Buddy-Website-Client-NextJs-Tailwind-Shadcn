@@ -2,13 +2,11 @@
 
 export interface IReview {
     _id?: string;
-    arrangedBy: string;
+    user: string;
     travelPlan: string,
     traveler: string,
-    arrangedByDescription?: string;
-    arrangedByRating?: number;
-    travelerRating?: number;
-    travelerByDescription?: string;
+    description?: string;
+    rating?: number;
     createdAt?: Date;
     updatedAt?: Date;
 };

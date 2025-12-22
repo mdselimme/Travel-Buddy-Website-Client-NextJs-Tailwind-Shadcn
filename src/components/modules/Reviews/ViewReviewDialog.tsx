@@ -66,7 +66,7 @@ const ViewReviewDialog: React.FC<ViewReviewDialogProps> = ({
             </div>
             <div className="space-y-2">
               <h4 className="font-medium">Arranged By</h4>
-              <p className="text-sm">{review.arrangedBy.profile.fullName}</p>
+              <p className="text-sm">{review.user.profile.fullName}</p>
             </div>
           </div>
 
@@ -78,15 +78,15 @@ const ViewReviewDialog: React.FC<ViewReviewDialogProps> = ({
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Rating:</span>
-                {renderStars(review.arrangedByRating)}
+                {renderStars(review.rating)}
                 <span className="text-sm text-muted-foreground">
-                  ({review.arrangedByRating}/5)
+                  ({review.rating}/5)
                 </span>
               </div>
               <div>
                 <p className="text-sm font-medium mb-1">Description:</p>
                 <p className="text-sm text-muted-foreground">
-                  {review.arrangedByDescription || "No description provided"}
+                  {review.description || "No description provided"}
                 </p>
               </div>
             </div>
@@ -100,15 +100,15 @@ const ViewReviewDialog: React.FC<ViewReviewDialogProps> = ({
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-medium">Rating:</span>
-                {renderStars(review.travelerRating)}
+                {renderStars(review.rating)}
                 <span className="text-sm text-muted-foreground">
-                  ({review.travelerRating}/5)
+                  ({review.rating}/5)
                 </span>
               </div>
               <div>
                 <p className="text-sm font-medium mb-1">Description:</p>
                 <p className="text-sm text-muted-foreground">
-                  {review.travelerDescription || "No description provided"}
+                  {review.description || "No description provided"}
                 </p>
               </div>
             </div>

@@ -21,8 +21,8 @@ import { createReviewAction } from "@/actions/review/createReview";
 
 // Zod Schema
 const createReviewZodSchema = z.object({
-  arrangedBy: z.string({
-    message: "ArrangedBy is required & must be an ObjectId.",
+  user: z.string({
+    message: "User is required & must be an ObjectId.",
   }),
   travelPlan: z.string({
     message: "TravelPlan is required & must be an ObjectId.",
@@ -30,11 +30,11 @@ const createReviewZodSchema = z.object({
   traveler: z.string({
     message: "Traveler is required & must be an ObjectId.",
   }),
-  arrangedByRating: z
+  rating: z
     .number({ message: "Rating is required" })
     .min(1, "Rating must be at least 1")
     .max(5, "Rating must be at most 5"),
-  arrangedByDescription: z
+  description: z
     .string({ message: "Description is required" })
     .min(10, "Description must be at least 10 characters long"),
 });
@@ -44,27 +44,26 @@ type CreateReviewInput = z.infer<typeof createReviewZodSchema>;
 interface ReviewSectionProps {
   travelPlanId: string;
   isCompleted: boolean;
-  arrangedBy: string;
+  user: string;
   traveler: string;
 }
 
 export default function ReviewSection({
   travelPlanId,
   isCompleted,
-  arrangedBy,
+  user: arrangedBy,
   traveler,
 }: ReviewSectionProps) {
-  console.log({ travelPlanId, arrangedBy, traveler });
   const [hoverRating, setHoverRating] = useState<number>(0);
 
   const form = useForm<CreateReviewInput>({
     resolver: zodResolver(createReviewZodSchema),
     defaultValues: {
-      arrangedBy: arrangedBy,
+      user: arrangedBy,
       travelPlan: travelPlanId,
       traveler: traveler,
-      arrangedByRating: 0,
-      arrangedByDescription: "",
+      rating: 0,
+      description: "",
     },
   });
 
@@ -102,7 +101,7 @@ export default function ReviewSection({
             {/* Star Rating Field */}
             <FormField
               control={form.control}
-              name="arrangedByRating"
+              name="rating"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold">
@@ -143,7 +142,7 @@ export default function ReviewSection({
             {/* Description Field */}
             <FormField
               control={form.control}
-              name="arrangedByDescription"
+              name="description"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-sm font-semibold">

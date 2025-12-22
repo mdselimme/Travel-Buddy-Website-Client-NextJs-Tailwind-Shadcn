@@ -15,12 +15,20 @@ export interface TravelPlanId {
     user: string;
 }
 
+interface IMatchProfile {
+    _id: string;
+    profile: {
+        _id: string;
+        fullName: string;
+    }
+}
+
 
 export interface IMatch {
     _id: string;
     travelPlanId: TravelPlanId;
-    senderId: string;
-    receiverId: string;
+    senderId: IMatchProfile;
+    receiverId: IMatchProfile;
     status: MatchStatus;
     createdAt?: Date;
     updatedAt?: Date;

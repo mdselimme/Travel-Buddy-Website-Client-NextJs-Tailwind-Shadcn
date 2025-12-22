@@ -1,14 +1,12 @@
 export interface IMyReview {
     _id: string
     travelPlan: TravelPlan
-    arrangedBy: ArrangedBy
+    user: ArrangedBy
     traveler: Traveler
-    arrangedByRating: number
-    arrangedByDescription: string
-    travelerRating: number
-    travelerDescription: string
-    createdAt: string
-    updatedAt: string
+    rating: number
+    description: string
+    createdAt?: string
+    updatedAt?: string
 }
 
 export interface Profile {

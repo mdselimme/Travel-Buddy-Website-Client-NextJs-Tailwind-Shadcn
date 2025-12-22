@@ -3,7 +3,6 @@ import { getUserInfo } from "@/actions/user/getUserInfo";
 import MyMatchesTable from "@/components/modules/MyMatches/MyMatchesTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IMatch } from "@/types/matches.types";
-import React from "react";
 
 const MyMatchesPage = async () => {
   const myMatches = (await getMyMatches()) as IMatch[];

@@ -39,7 +39,7 @@ const MyReviewsTable: React.FC<MyReviewsTableProps> = ({
   };
 
   const isArrangedBy = (review: IMyReview) => {
-    return review.arrangedBy._id === currentUserId;
+    return review.user._id === currentUserId;
   };
 
   return (
@@ -76,7 +76,7 @@ const MyReviewsTable: React.FC<MyReviewsTableProps> = ({
                     {review.travelPlan.travelTitle}
                   </TableCell>
                   <TableCell>{review.traveler.profile.fullName}</TableCell>
-                  <TableCell>{review.arrangedBy.profile.fullName}</TableCell>
+                  <TableCell>{review.user.profile.fullName}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button
