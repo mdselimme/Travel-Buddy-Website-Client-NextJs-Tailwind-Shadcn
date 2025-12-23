@@ -1,15 +1,24 @@
 import { getMyMatches } from "@/actions/matches/getMyMatches";
 import { getTravelPlanById } from "@/actions/TravelPlan/getTravelPlanById";
-import MatchesTable from "@/components/modules/MyPlans/MatchesTable";
+import { getTravelPlanReviews } from "@/actions/TravelPlan/getTravelPlanReviews";
+import MatchesTable from "@/components/modules/MyMatches/MatchesTable";
+import ReviewsTable from "@/components/modules/MyPlans/ReviewsTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IMatch } from "@/types/matches.types";
-import { ITravelPlan } from "@/types/travel.plan.types";
+import { IMyTravelPlanReviews } from "@/types/myrevies.types";
+import { ITravelPlan, TravelPlanStatus } from "@/types/travel.plan.types";
 
-const ManageTravelPlans = async ({ params }: { params: { id: string } }) => {
+const ManageTravelPlans = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const { id } = await params;
   const plan = (await getTravelPlanById(id)) as ITravelPlan;
-  console.log({ plan });
   const myMatches = (await getMyMatches()) as IMatch[];
+  const myTravelPlanReviews = (await getTravelPlanReviews(
+    id
+  )) as IMyTravelPlanReviews[];
 
   if (!myMatches || myMatches.length === 0) {
     return (
@@ -33,6 +42,8 @@ const ManageTravelPlans = async ({ params }: { params: { id: string } }) => {
     );
   }
 
+  const isCompleted = plan.travelPlanStatus === TravelPlanStatus.COMPLETED;
+
   return (
     <div className="space-y-6">
       <div>
@@ -50,6 +61,8 @@ const ManageTravelPlans = async ({ params }: { params: { id: string } }) => {
           <MatchesTable matches={myMatches} />
         </CardContent>
       </Card>
+
+      {isCompleted && <ReviewsTable reviews={myTravelPlanReviews} />}
     </div>
   );
 };

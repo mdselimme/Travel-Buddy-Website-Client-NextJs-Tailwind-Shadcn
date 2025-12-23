@@ -29,4 +29,14 @@ export interface Traveler {
     profile: Profile
 }
 
+export interface IMyTravelPlanReviews {
+    _id: string
+    travelPlan: TravelPlan
+    user: string;
+    traveler: Traveler
+    rating: number
+    description: string
+    createdAt?: string
+    updatedAt?: string
+}
 

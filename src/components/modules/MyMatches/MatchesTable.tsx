@@ -62,7 +62,7 @@ const MatchesTable = ({ matches }: MatchesTableProps) => {
               {/* Sender Link */}
               <TableCell>
                 <Link
-                  href={`/profile/${match.senderId}`}
+                  href={`/profile/${match.senderId._id}`}
                   className="text-blue-600 hover:underline font-medium"
                 >
                   View Sender
