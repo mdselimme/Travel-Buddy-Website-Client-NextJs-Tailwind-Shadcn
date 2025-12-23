@@ -62,7 +62,13 @@ const ManageTravelPlans = async ({
         </CardContent>
       </Card>
 
-      {isCompleted && <ReviewsTable reviews={myTravelPlanReviews} />}
+      {isCompleted && (
+        <ReviewsTable
+          travelPlanId={plan._id}
+          currentUserId={plan.user}
+          reviews={myTravelPlanReviews}
+        />
+      )}
     </div>
   );
 };
