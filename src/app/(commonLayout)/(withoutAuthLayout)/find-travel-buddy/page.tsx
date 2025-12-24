@@ -9,7 +9,7 @@ const FindTravelBuddy = async () => {
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-8 text-center">
         <h1 className="text-4xl font-bold text-gray-900 mb-2">
           Find Your Travel Buddy
         </h1>
