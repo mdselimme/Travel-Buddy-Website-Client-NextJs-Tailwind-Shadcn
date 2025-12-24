@@ -65,6 +65,7 @@ export const profileFormSchema = z.object({
     .array(
       z.string({ error: "interests must be a string array & Valid Object Id" })
     )
+    .min(1, { error: "Select at least one interest" })
     .optional(),
   bio: z.string({ error: "bio must be a string" }).optional(),
 });

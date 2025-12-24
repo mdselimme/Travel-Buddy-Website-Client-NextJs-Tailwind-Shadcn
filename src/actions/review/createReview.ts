@@ -19,7 +19,6 @@ export const createReviewAction = async (reviewData: IReview) => {
         }
 
         return data;
-
     }
     catch (error) {
         console.log("Error in createReviewAction:", error);

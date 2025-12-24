@@ -125,6 +125,19 @@ const MyMatchesTravelPlan = async () => {
           </Card>
         ))}
       </div>
+
+      {/* View All Travel Plans Button */}
+      <div className="flex justify-center pt-4">
+        <Link href="/explore">
+          <Button
+            size="lg"
+            variant="default"
+            className="px-8 cursor-pointer text-white"
+          >
+            View All Travel Plans
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };
