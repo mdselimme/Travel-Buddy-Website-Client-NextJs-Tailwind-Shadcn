@@ -2,7 +2,7 @@ import { getNewAccessToken } from "@/actions/auth/refreshToken";
 import { getCookie } from "./tokenHandlers";
 
 
-const SERVER_API_URL = process.env.NEXT_PUBLIC_SERVER_API_URL || "http://localhost:5000/api/v1";
+const SERVER_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
 
 

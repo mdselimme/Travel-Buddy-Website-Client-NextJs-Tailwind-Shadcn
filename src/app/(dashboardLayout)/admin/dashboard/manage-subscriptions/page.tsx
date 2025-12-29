@@ -1,6 +1,6 @@
 import { getAllSubscription } from "@/actions/subscription/getAllSubscription";
 import SubscriptionsManagementTable from "@/components/modules/Subscription/SubscriptionsManagementTable";
-
+export const dynamic = "force-dynamic";
 const ManageSubscriptionsAdminPage = async () => {
   const allSubscriptions = await getAllSubscription();
 

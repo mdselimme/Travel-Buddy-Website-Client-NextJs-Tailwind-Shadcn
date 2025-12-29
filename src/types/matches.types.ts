@@ -33,3 +33,13 @@ export interface IMatch {
     createdAt?: Date;
     updatedAt?: Date;
 };
+
+export interface IMatchInput {
+    _id: string;
+    travelPlanId: string;
+    senderId: string;
+    receiverId: string;
+    status: MatchStatus;
+    createdAt?: Date;
+    updatedAt?: Date;
+};

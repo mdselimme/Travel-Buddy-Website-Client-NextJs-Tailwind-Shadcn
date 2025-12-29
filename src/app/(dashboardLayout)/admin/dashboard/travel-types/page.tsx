@@ -2,7 +2,7 @@ import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import AddTravelTypeDialog from "@/components/modules/TravelTypes/AddTravelTypeDialog";
 import TravelTypesList from "@/components/modules/TravelTypes/TravelTypesList";
 import { Card } from "@/components/ui/card";
-
+export const dynamic = "force-dynamic";
 const TravelTypesManagementPage = async () => {
   const { data: allTravelTypes } = await getAllTravelType();
 
@@ -27,9 +27,12 @@ const TravelTypesManagementPage = async () => {
           <Card className="mt-8 p-12 text-center">
             <div className="space-y-4">
               <div className="text-6xl">📭</div>
-              <h3 className="text-2xl font-bold text-gray-900">No Travel Types Yet</h3>
+              <h3 className="text-2xl font-bold text-gray-900">
+                No Travel Types Yet
+              </h3>
               <p className="text-gray-600 max-w-md mx-auto">
-                Start by creating your first travel type using the form above. This will help users categorize their travel plans.
+                Start by creating your first travel type using the form above.
+                This will help users categorize their travel plans.
               </p>
             </div>
           </Card>

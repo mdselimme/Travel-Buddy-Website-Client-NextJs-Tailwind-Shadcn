@@ -1,10 +1,10 @@
 "use server"
 
 import { serverFetch } from "@/lib/serverFetch";
-import { IMatch } from "@/types/matches.types"
+import { IMatchInput } from "@/types/matches.types"
 
 
-export const requestMatchAction = async (matchData: Partial<IMatch>) => {
+export const requestMatchAction = async (matchData: Partial<IMatchInput>) => {
     try {
         const response = await serverFetch.post("/matches/create", {
             body: JSON.stringify(matchData),

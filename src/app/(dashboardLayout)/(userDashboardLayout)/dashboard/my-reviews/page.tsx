@@ -1,7 +1,7 @@
 import { getMyReview } from "@/actions/review/getMyReview";
 import { IMyReview } from "@/types/myrevies.types";
 import MyReviewsTable from "@/components/modules/Reviews/MyReviewsTable";
-
+export const dynamic = "force-dynamic";
 const MyReviewsPage = async () => {
   const myReviews = (await getMyReview()) as IMyReview[];
 

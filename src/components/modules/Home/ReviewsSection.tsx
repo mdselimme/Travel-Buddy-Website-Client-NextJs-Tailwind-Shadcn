@@ -57,8 +57,8 @@ const ReviewsSection = async () => {
             <div className="grid md:grid-cols-3 gap-8 mb-8">
               {displayedReviews.map((review) => {
                 // Determine which user left the review and their rating/description
-                const reviewerName = review?.traveler.profile.fullName;
-                const reviewName = review?.user.profile.fullName;
+                const reviewerName = review?.reviewed.profile.fullName;
+                const reviewName = review?.reviewer.profile.fullName;
                 const rating = review?.rating;
                 const description = review?.description;
 

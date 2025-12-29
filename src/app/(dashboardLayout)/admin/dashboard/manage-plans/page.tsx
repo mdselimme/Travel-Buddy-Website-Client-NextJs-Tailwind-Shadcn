@@ -1,6 +1,6 @@
 import { getAllTravelsPlans } from "@/actions/TravelPlan/getAllTravelPlans";
 import ManageTravelPlansTable from "@/components/modules/TravelPlan/ManageTravelPlansTable";
-
+export const dynamic = "force-dynamic";
 const ManagePlanPage = async () => {
   const { data: allTravelPlans } = await getAllTravelsPlans();
 

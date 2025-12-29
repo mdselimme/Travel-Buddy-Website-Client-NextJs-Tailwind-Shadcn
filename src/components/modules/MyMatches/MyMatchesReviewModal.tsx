@@ -28,13 +28,13 @@ import { createReviewAction } from "@/actions/review/createReview";
 
 // Zod Schema
 const createReviewZodSchema = z.object({
-  user: z
+  reviewer: z
     .string({ message: "ArrangedBy is required & must be an ObjectId." })
     .min(1, "ArrangedBy is required"),
   travelPlan: z
     .string({ message: "TravelPlan is required & must be an ObjectId." })
     .min(1, "TravelPlan is required"),
-  traveler: z
+  reviewed: z
     .string({ message: "Traveler is required & must be an ObjectId." })
     .min(1, "Traveler is required"),
   rating: z
@@ -63,9 +63,9 @@ export default function MyMatchesReviewModal({
   const form = useForm<CreateReviewInput>({
     resolver: zodResolver(createReviewZodSchema),
     defaultValues: {
-      user: match?.travelPlanId?.user || "",
+      reviewer: match?.travelPlanId?.user || "",
       travelPlan: match?.travelPlanId?._id || "",
-      traveler: userId,
+      reviewed: userId,
       rating: 0,
       description: "",
     },

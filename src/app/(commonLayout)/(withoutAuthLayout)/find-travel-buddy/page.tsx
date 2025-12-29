@@ -1,7 +1,7 @@
 import { getAllProfiles } from "@/actions/profile/getAllProfiles";
 import { ITravelBuddyProfile } from "@/types/travelBuddy.types";
-import React from "react";
 import TravelBuddyCard from "@/components/modules/FindTravelBuddy/TravelBuddyCard";
+export const dynamic = "force-dynamic";
 
 const FindTravelBuddy = async () => {
   const allProfiles = (await getAllProfiles()) as ITravelBuddyProfile[];

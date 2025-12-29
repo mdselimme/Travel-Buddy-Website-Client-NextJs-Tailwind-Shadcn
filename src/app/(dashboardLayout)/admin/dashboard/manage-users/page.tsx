@@ -1,6 +1,6 @@
 import { getAllUser } from "@/actions/user/getAllUser";
 import ManageUsersTable from "../../../../../components/modules/ManageUsers/ManageUsersTable";
-
+export const dynamic = "force-dynamic";
 const ManageUser = async () => {
   const allUsers = await getAllUser({ limit: 10, page: 1 });
 
