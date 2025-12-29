@@ -1,8 +1,8 @@
 export interface IMyReview {
     _id: string
     travelPlan: TravelPlan
-    user: ArrangedBy
-    traveler: Traveler
+    reviewer: IReviewer
+    reviewed: IReviewer
     rating: number
     description: string
     createdAt?: string
@@ -15,28 +15,24 @@ export interface Profile {
 }
 
 export interface TravelPlan {
-    _id: string
-    travelTitle: string
+    _id: string;
+    travelTitle: string;
 }
 
-export interface ArrangedBy {
+export interface IReviewer {
     _id: string
     profile: Profile
 }
 
-export interface Traveler {
-    _id: string
-    profile: Profile
-}
 
 export interface IMyTravelPlanReviews {
-    _id: string
-    travelPlan: TravelPlan
-    user: string;
-    traveler: Traveler
-    rating: number
-    description: string
-    createdAt?: string
-    updatedAt?: string
+    _id: string;
+    travelPlan: TravelPlan;
+    reviewer: IReviewer;
+    reviewed: IReviewer;
+    rating: number;
+    description: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 

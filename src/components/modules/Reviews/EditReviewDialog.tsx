@@ -57,7 +57,7 @@ const EditReviewDialog = ({
         <DialogHeader>
           <DialogTitle>Edit Review</DialogTitle>
           <DialogDescription>
-            Update your review for {review.traveler.profile.fullName}
+            Update your review for {review.reviewer.profile.fullName}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">

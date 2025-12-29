@@ -2,9 +2,9 @@
 
 export interface IReview {
     _id?: string;
-    user: string;
+    reviewer: string;
     travelPlan: string,
-    traveler: string,
+    reviewed: string,
     description?: string;
     rating?: number;
     createdAt?: Date;

@@ -21,13 +21,13 @@ import { createReviewAction } from "@/actions/review/createReview";
 
 // Zod Schema
 const createReviewZodSchema = z.object({
-  user: z.string({
+  reviewer: z.string({
     message: "User is required & must be an ObjectId.",
   }),
   travelPlan: z.string({
     message: "TravelPlan is required & must be an ObjectId.",
   }),
-  traveler: z.string({
+  reviewed: z.string({
     message: "Traveler is required & must be an ObjectId.",
   }),
   rating: z
@@ -59,9 +59,9 @@ export default function ReviewSection({
   const form = useForm<CreateReviewInput>({
     resolver: zodResolver(createReviewZodSchema),
     defaultValues: {
-      user: arrangedBy,
+      reviewer: arrangedBy,
       travelPlan: travelPlanId,
-      traveler: traveler,
+      reviewed: traveler,
       rating: 0,
       description: "",
     },

@@ -39,9 +39,9 @@ import { toast } from "sonner";
 
 // Zod Schema
 const reviewSchema = z.object({
-  user: z.string().min(1, "User ID is required"),
+  reviewer: z.string().min(1, "User ID is required"),
   travelPlan: z.string().min(1, "Travel plan ID is required"),
-  traveler: z.string().min(1, "Traveler ID is required"),
+  reviewed: z.string().min(1, "Traveler ID is required"),
   rating: z
     .number({ message: "Rating is required" })
     .min(1, "Please select a rating")
@@ -75,9 +75,9 @@ export default function ReviewsTable({
   const form = useForm<ReviewFormData>({
     resolver: zodResolver(reviewSchema),
     defaultValues: {
-      user: currentUserId,
+      reviewed: currentUserId,
       travelPlan: travelPlanId,
-      traveler: "",
+      reviewer: "",
       rating: 0,
       description: "",
     },
@@ -86,9 +86,9 @@ export default function ReviewsTable({
   const handleOpenModal = (travelerId: string, travelerName: string) => {
     setSelectedTraveler({ id: travelerId, name: travelerName });
     form.reset({
-      user: travelerId,
+      reviewed: travelerId,
       travelPlan: travelPlanId,
-      traveler: currentUserId,
+      reviewer: currentUserId,
       rating: 0,
       description: "",
     });
@@ -168,7 +168,7 @@ export default function ReviewsTable({
                         <User className="w-4 h-4 text-blue-600" />
                       </div>
                       <span className="font-medium">
-                        {review.traveler.profile.fullName}
+                        {review.reviewed.profile.fullName}
                       </span>
                     </div>
                   </TableCell>
@@ -205,8 +205,8 @@ export default function ReviewsTable({
                       variant="outline"
                       onClick={() =>
                         handleOpenModal(
-                          review.traveler._id,
-                          review.traveler.profile.fullName
+                          review.reviewed._id,
+                          review.reviewed.profile.fullName
                         )
                       }
                     >
