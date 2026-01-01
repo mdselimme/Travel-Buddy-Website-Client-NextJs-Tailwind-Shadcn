@@ -4,7 +4,7 @@ import { serverFetch } from "@/lib/serverFetch";
 import { revalidateTag } from "next/cache";
 
 export const deleteTravelPlanAction = async (travelId: string) => {
-    console.log({ travelId })
+
     try {
         const response = await serverFetch.delete(`/travel-plan/${travelId}`);
         const data = await response.json();

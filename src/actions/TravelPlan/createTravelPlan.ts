@@ -6,7 +6,6 @@ import { revalidateTag } from "next/cache";
 
 export const createTravelPlanAction = async (travelPlanData: FormData) => {
     try {
-        console.log(travelPlanData)
 
         const response = await serverFetch.post("/travel-plan/create-plan", {
             body: travelPlanData

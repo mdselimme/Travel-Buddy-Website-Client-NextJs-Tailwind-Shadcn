@@ -30,11 +30,7 @@ const getStatusBadge = (status: string) => {
     CANCELLED: { className: "bg-gray-500 text-white", label: "Cancelled" },
   };
 
-  // Debug log
-  console.log("Status value received:", status, "Type:", typeof status);
-
   const statusKey = status?.toUpperCase?.() || "PENDING";
-  console.log("Status key used:", statusKey);
 
   const config =
     statusConfig[statusKey as keyof typeof statusConfig] ||
@@ -45,10 +41,6 @@ const getStatusBadge = (status: string) => {
 const MySubscriptionPage = async () => {
   const subscriptions = await getAllSubscription();
   const mePayments = await getMePayment();
-  console.log("All payments:", mePayments);
-  if (mePayments && mePayments.length > 0) {
-    console.log("First payment status:", mePayments[0].status);
-  }
 
   return (
     <div>

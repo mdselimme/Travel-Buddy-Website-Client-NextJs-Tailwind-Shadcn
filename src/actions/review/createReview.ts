@@ -4,7 +4,6 @@ import { serverFetch } from "@/lib/serverFetch";
 import { IReview } from "@/types/review.types";
 
 export const createReviewAction = async (reviewData: IReview) => {
-    console.log({ reviewData })
     try {
         const response = await serverFetch.post("/review/create", {
             body: JSON.stringify(reviewData),

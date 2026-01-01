@@ -5,7 +5,7 @@ import { ISubscription } from "@/types/subscription";
 import { revalidateTag } from "next/cache";
 
 export const updateSubscriptionAction = async (updateData: ISubscription) => {
-    console.log({ updateData })
+
     try {
         const response = await serverFetch.patch(`/subscription/${updateData._id}`, {
             body: JSON.stringify(updateData),

@@ -46,7 +46,6 @@ export default function RequestToJoinButton({
       };
 
       const result = await requestMatchAction(matchesData);
-      console.log({ result });
       if (result.success) {
         toast.success(result.message || "Request sent successfully!");
         setIsRequested(true);

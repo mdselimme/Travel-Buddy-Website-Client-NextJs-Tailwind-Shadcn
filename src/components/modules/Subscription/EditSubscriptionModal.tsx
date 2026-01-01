@@ -37,7 +37,9 @@ import { toast } from "sonner";
 
 // Zod Validation Schema
 const editSubscriptionSchema = z.object({
-  plan: z.enum([SubscriptionPlan.MONTHLY, SubscriptionPlan.YEARLY], { message: "Invalid plan type" }),
+  plan: z.enum([SubscriptionPlan.MONTHLY, SubscriptionPlan.YEARLY], {
+    message: "Invalid plan type",
+  }),
   price: z
     .number()
     .min(0, "Price must be greater than or equal to 0")
@@ -103,10 +105,7 @@ export default function EditSubscriptionModal({
   }, [subscription, open, form]);
 
   const handleSubmit = async (data: EditSubscriptionFormData) => {
-    
-        if (!subscription) return;
-
-        console.log(data)
+    if (!subscription) return;
 
     try {
       const result = await updateSubscriptionAction({

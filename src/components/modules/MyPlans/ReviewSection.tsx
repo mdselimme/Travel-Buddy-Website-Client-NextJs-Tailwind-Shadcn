@@ -72,7 +72,6 @@ export default function ReviewSection({
   }
 
   const onSubmit = async (data: CreateReviewInput) => {
-    console.log({ data });
     try {
       const result = await createReviewAction(data);
 

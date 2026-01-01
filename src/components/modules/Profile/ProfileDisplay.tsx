@@ -16,8 +16,6 @@ export default function ProfileDisplay({
   profile,
   travelTypes,
 }: ProfileDisplayProps) {
-  console.log({ travelTypes });
-
   // Filter travel types to only show those matching user interests
   const matchedTravelTypes = travelTypes.filter((type) =>
     profile.interests?.includes(type._id)

@@ -139,7 +139,6 @@ export default function CreateNewPlanForm({
   });
 
   const handleSubmit = async (data: PlanFormData) => {
-    console.log({ data });
     setIsSubmitting(true);
     try {
       // Create FormData object for file upload

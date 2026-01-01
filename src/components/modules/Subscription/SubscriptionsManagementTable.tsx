@@ -82,10 +82,6 @@ export default function SubscriptionsManagementTable({
     if (!editingSubscription) return;
     setIsUpdating(true);
     try {
-      // TODO: Implement update subscription action
-      console.log("Updating subscription:", editingSubscription._id, formData);
-
-      // Update the subscription in the list
       setSubscriptions(
         subscriptions.map((sub) =>
           sub._id === editingSubscription._id ? { ...sub, ...formData } : sub

@@ -63,9 +63,9 @@ export default function MyMatchesReviewModal({
   const form = useForm<CreateReviewInput>({
     resolver: zodResolver(createReviewZodSchema),
     defaultValues: {
-      reviewer: match?.travelPlanId?.user || "",
-      travelPlan: match?.travelPlanId?._id || "",
-      reviewed: userId,
+      reviewer: userId,
+      travelPlan: match?.travelPlanId?._id,
+      reviewed: match?.travelPlanId?.user,
       rating: 0,
       description: "",
     },

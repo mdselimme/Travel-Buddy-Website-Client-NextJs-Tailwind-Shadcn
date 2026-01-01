@@ -7,7 +7,6 @@ export const dynamic = "force-dynamic";
 const MyMatchesPage = async () => {
   const myMatches = (await getMyMatches()) as IMatch[];
   const user = await getUserInfo();
-  console.log({ myMatches });
 
   return (
     <div className="space-y-6">

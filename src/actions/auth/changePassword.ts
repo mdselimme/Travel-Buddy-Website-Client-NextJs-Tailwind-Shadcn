@@ -7,7 +7,6 @@ interface ChangePasswordInput {
 }
 
 export const changePasswordAction = async (passwordData: ChangePasswordInput) => {
-    console.log(passwordData)
     const response = await serverFetch.post('/auth/change-password', {
         body: JSON.stringify(passwordData),
         headers: {

@@ -78,8 +78,6 @@ export default function ManageTravelPlansTable({
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      // TODO: Implement delete travel plan action
-      console.log("Deleting travel plan:", deleteId);
       // After successful deletion, remove from list
       setTravelPlans(travelPlans.filter((plan) => plan._id !== deleteId));
       setDeleteId(null);

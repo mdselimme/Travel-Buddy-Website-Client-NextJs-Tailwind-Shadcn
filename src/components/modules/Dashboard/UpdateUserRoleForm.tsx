@@ -59,9 +59,6 @@ export default function UpdateUserRoleForm() {
       setIsLoading(true);
       setSuccessMessage("");
 
-      // TODO: Replace with actual API call
-      console.log("Updating user role:", data);
-
       // Example: const response = await updateUserRoleAction(data);
       setSuccessMessage(`Successfully updated user role for ${data.email}`);
       form.reset();
