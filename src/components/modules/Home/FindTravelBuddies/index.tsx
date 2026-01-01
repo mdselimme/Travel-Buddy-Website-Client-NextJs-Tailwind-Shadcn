@@ -6,7 +6,7 @@ const FindTravelBuddies = async () => {
   const allCities: string[] = await getAvailableCities();
 
   return (
-    <div className="py-16">
+    <div className="py-16 px-4 sm:px-6 lg:px-8 w-full">
       <FindTravelBuddiesHero cities={allCities} />
     </div>
   );
