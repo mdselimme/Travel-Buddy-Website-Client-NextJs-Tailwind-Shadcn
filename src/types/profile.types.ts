@@ -5,6 +5,7 @@ export interface IProfile {
     user: string;
     fullName: string;
     email: string;
+    averageRating: number;
     contactNumber?: string;
     profileImage?: string;
     address?: string;

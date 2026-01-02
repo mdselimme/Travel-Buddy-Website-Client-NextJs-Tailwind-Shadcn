@@ -11,4 +11,5 @@ export interface ITravelBuddyProfile {
     interests: IInterest[];
     currentLocation: string;
     profileImage: string;
+    averageRating: number;
 }

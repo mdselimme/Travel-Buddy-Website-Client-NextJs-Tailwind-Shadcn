@@ -4,7 +4,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ITravelBuddyProfile } from "@/types/travelBuddy.types";
-import { MapPin, User } from "lucide-react";
+import { MapPin, User, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -35,9 +35,29 @@ export default function TravelBuddyCard({ profile }: TravelBuddyCardProps) {
       </div>
 
       {/* Name */}
-      <h4 className="text-center text-xl font-bold text-foreground mb-4">
+      <h4 className="text-center text-xl font-bold text-foreground mb-2">
         {profile.fullName}
       </h4>
+
+      {/* Average Rating */}
+      <div className="flex items-center justify-center gap-1 mb-4">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Star
+            key={star}
+            className={`w-4 h-4 ${
+              star <= profile.averageRating
+                ? "fill-yellow-400 text-yellow-400"
+                : "text-gray-300"
+            }`}
+          />
+        ))}
+        <span
+          className="ml-1 text-xs text-muted-foreground"
+          title="Average Rating"
+        >
+          {profile.averageRating.toFixed(1)}
+        </span>
+      </div>
 
       {/* Location */}
       {profile.currentLocation && (
