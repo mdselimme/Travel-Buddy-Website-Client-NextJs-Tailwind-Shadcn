@@ -158,14 +158,14 @@ const PublicHeader = () => {
           <div className="py-4 border-t border-gray-200 dark:border-gray-800">
             <div className="flex flex-col space-y-1">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.title}
                   href={link.href}
                   onClick={() => setIsMenuOpen(false)}
                   className="px-3 py-2.5 text-sm sm:text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   {link.title}
-                </a>
+                </Link>
               ))}
               <div className="pt-4 mt-2 border-t border-gray-200 dark:border-gray-700 flex flex-col space-y-2">
                 {token ? (

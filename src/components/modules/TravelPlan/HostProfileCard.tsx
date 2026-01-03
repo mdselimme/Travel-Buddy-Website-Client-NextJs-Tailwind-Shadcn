@@ -51,6 +51,17 @@ export default function HostProfileCard({
         {profile.fullName}
       </h4>
 
+      {/* Average Rating */}
+      {profile.averageRating > 0 && (
+        <div className="flex justify-center items-center gap-1 mb-2">
+          <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+          <span className="text-lg font-semibold text-foreground">
+            {profile.averageRating.toFixed(1)}
+          </span>
+          <span className="text-sm text-muted-foreground">/5</span>
+        </div>
+      )}
+
       {/* Subscription Status */}
       {profile.isSubscribed && (
         <div className="flex justify-center mb-4">
