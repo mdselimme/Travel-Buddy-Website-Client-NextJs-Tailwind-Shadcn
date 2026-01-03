@@ -11,7 +11,15 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { IPayment } from "@/types/payments.types";
+import { Metadata } from "next";
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: `Dashboard My Subscriptions || Travel Buddy`,
+  description:
+    "Travel Buddy My Subscriptions Page to manage your subscriptions.",
+};
+
 const formatDate = (date: Date | string | undefined) => {
   if (!date) return "N/A";
   const d = new Date(date);

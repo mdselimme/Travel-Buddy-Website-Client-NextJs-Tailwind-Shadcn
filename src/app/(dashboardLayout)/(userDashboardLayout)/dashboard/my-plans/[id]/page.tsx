@@ -7,6 +7,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { IMatch } from "@/types/matches.types";
 import { IMyTravelPlanReviews } from "@/types/myrevies.types";
 import { ITravelPlan, TravelPlanStatus } from "@/types/travel.plan.types";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Dashboard Manage Travel Plan || Travel Buddy`,
+  description:
+    "Travel Buddy Manage Travel Plan Page to manage your travel plans.",
+};
 
 const ManageTravelPlans = async ({
   params,

@@ -1,13 +1,18 @@
 import { getTravelPlanById } from "@/actions/TravelPlan/getTravelPlanById";
-
 import TravelPlanDetailsDisplay from "@/components/modules/TravelPlan/TravelPlanDetailsDisplay";
 import HostProfileCard from "@/components/modules/TravelPlan/HostProfileCard";
 import RequestToJoinButton from "@/components/modules/TravelPlan/RequestToJoinButton";
 import Image from "next/image";
-import React from "react";
 import { getProfileByUserId } from "@/actions/profile/getProfileByUserId";
 import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import { ITravelType } from "@/types/travel.type";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Travel Plan Details || Travel Buddy`,
+  description:
+    "Travel Buddy Travel Plan Details Page to view travel plans and types.",
+};
 
 const TravelPlanDetails = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;

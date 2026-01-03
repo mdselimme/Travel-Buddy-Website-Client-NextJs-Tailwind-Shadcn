@@ -1,7 +1,14 @@
 import { getAllProfiles } from "@/actions/profile/getAllProfiles";
 import { ITravelBuddyProfile } from "@/types/travelBuddy.types";
 import TravelBuddyCard from "@/components/modules/FindTravelBuddy/TravelBuddyCard";
+import { Metadata } from "next";
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: `Find Travel Buddy || Travel Buddy`,
+  description:
+    "Travel Buddy Find Travel Buddy Page to connect with fellow travelers.",
+};
 
 const FindTravelBuddy = async () => {
   const allProfiles = (await getAllProfiles()) as ITravelBuddyProfile[];

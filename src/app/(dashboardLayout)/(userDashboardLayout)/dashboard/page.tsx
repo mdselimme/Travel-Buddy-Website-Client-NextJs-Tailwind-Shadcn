@@ -1,5 +1,11 @@
 import { getStats } from "@/actions/stats/getStats";
-import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `User Dashboard Home || Travel Buddy`,
+  description:
+    "Travel Buddy User Dashboard Home Page to view your travel plan statistics.",
+};
 
 const CommonDashboardPage = async () => {
   const { data: stats } = await getStats();

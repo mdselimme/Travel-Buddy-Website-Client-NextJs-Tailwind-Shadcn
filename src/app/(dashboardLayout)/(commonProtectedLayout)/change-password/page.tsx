@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: `Dashboard - Update Password`,
+  title: `Dashboard Change Password || Travel Buddy`,
   description: "Dashboard Change Password Page",
 };
 

@@ -1,5 +1,11 @@
 import { ForgotPasswordForm } from "@/components/modules/Authentication/ForgotPasswordForm";
-import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Forgot Password`,
+  description:
+    "Travel Buddy Forgot Password Page to reset your account password.",
+};
 
 const ForgetPasswordPage = () => {
   return (

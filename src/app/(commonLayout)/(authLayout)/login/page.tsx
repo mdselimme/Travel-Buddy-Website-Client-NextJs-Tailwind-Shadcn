@@ -3,6 +3,12 @@ import WebLogo from "@/assets/icons/WebLogo";
 import Link from "next/link";
 import LogInImage from "@/assets/images/login-image.png";
 import Image from "next/image";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Login`,
+  description: "Travel Buddy Login Page to access your account.",
+};
 
 export default async function LoginPage({
   searchParams,

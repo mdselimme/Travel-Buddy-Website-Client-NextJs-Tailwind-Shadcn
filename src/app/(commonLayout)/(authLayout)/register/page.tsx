@@ -3,6 +3,12 @@ import { RegisterForm } from "@/components/modules/Authentication/RegisterForm";
 import Image from "next/image";
 import Link from "next/link";
 import RegisterImage from "@/assets/images/register-image.jpg";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Register`,
+  description: "Travel Buddy Register Page to create a new account.",
+};
 
 const RegisterPage = () => {
   return (

@@ -1,6 +1,13 @@
 import { getAllUser } from "@/actions/user/getAllUser";
 import ManageUsersTable from "../../../../../components/modules/ManageUsers/ManageUsersTable";
+import { Metadata } from "next";
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: `Dashboard Manage Users || Travel Buddy`,
+  description: "Travel Buddy Manage Users Page to manage user roles.",
+};
+
 const ManageUser = async () => {
   const allUsers = await getAllUser({ limit: 10, page: 1 });
 

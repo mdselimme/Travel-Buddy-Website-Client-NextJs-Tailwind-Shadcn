@@ -1,5 +1,11 @@
 import { ResetPasswordForm } from "@/components/modules/Authentication/ResetPasswordForm";
-import React from "react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Reset Password`,
+  description:
+    "Travel Buddy Reset Password Page to reset your account password.",
+};
 
 const ResetPasswordPage = async ({
   searchParams,

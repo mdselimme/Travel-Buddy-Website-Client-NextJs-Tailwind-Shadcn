@@ -1,7 +1,13 @@
 import PaymentFailContent from "@/components/modules/Payment/PaymentFailContent";
 import { Card } from "@/components/ui/card";
-
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Payment Failed`,
+  description:
+    "Travel Buddy Payment Failed Page to inform users about the failure of their payment.",
+};
 
 export default function PaymentFailPage() {
   return (

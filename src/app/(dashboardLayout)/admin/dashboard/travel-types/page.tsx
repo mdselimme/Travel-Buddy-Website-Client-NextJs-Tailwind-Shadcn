@@ -2,7 +2,15 @@ import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import AddTravelTypeDialog from "@/components/modules/TravelTypes/AddTravelTypeDialog";
 import TravelTypesList from "@/components/modules/TravelTypes/TravelTypesList";
 import { Card } from "@/components/ui/card";
+import { Metadata } from "next";
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: `Dashboard Travel Types Management || Travel Buddy`,
+  description:
+    "Travel Buddy Travel Types Management Page to manage travel types.",
+};
+
 const TravelTypesManagementPage = async () => {
   const { data: allTravelTypes } = await getAllTravelType();
 

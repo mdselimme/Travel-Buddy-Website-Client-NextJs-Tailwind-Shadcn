@@ -1,6 +1,13 @@
 import PaymentSuccessContent from "@/components/modules/Payment/PaymentSuccessContent";
 import { Card } from "@/components/ui/card";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Payment Successful`,
+  description:
+    "Travel Buddy Payment Successful Page to inform users about the success of their payment.",
+};
 
 export default function PaymentSuccessPage() {
   return (

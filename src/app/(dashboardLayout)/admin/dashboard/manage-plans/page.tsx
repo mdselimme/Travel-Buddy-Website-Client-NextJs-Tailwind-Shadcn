@@ -1,6 +1,13 @@
 import { getAllTravelsPlans } from "@/actions/TravelPlan/getAllTravelPlans";
 import ManageTravelPlansTable from "@/components/modules/TravelPlan/ManageTravelPlansTable";
+import { Metadata } from "next";
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: `Dashboard Manage Plans || Travel Buddy`,
+  description: "Travel Buddy Manage Plans Page to manage travel plans.",
+};
+
 const ManagePlanPage = async () => {
   const { data: allTravelPlans } = await getAllTravelsPlans();
 

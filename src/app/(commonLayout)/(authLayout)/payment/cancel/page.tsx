@@ -1,6 +1,13 @@
 import PaymentCancelContent from "@/components/modules/Payment/PaymentCancelContent";
 import { Card } from "@/components/ui/card";
+import { Metadata } from "next";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Payment Canceled`,
+  description:
+    "Travel Buddy Payment Canceled Page to inform users about the cancellation of their payment.",
+};
 
 export default function PaymentCancelPage() {
   return (

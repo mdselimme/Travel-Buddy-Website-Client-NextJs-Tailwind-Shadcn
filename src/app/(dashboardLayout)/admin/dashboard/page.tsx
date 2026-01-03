@@ -1,6 +1,12 @@
 import { getStats } from "@/actions/stats/getStats";
-import React from "react";
 import AdminStatsDisplay from "@/components/modules/Dashboard/AdminStatsDisplay";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Admin Dashboard Home || Travel Buddy`,
+  description:
+    "Travel Buddy Admin Dashboard Home Page to view platform statistics.",
+};
 
 const DashboardPage = async () => {
   const stats = await getStats();

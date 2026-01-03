@@ -5,6 +5,12 @@ import {
   ExploreFilter,
   TravelPlansGrid,
 } from "@/components/modules/Explore";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Explore Travel Plans || Travel Buddy`,
+  description: "Travel Buddy Explore Page to browse travel plans and types.",
+};
 
 const ExplorePage = async ({
   searchParams,

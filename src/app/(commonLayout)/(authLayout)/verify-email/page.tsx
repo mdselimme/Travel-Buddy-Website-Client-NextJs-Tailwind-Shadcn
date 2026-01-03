@@ -1,4 +1,10 @@
 import { VerifyOtpForm } from "@/components/modules/Authentication/VerifyOtpForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: `Travel Buddy || Verify Email`,
+  description: "Travel Buddy Verify Email Page to verify your email address.",
+};
 
 const VerifyOtpPage = async ({
   searchParams,
