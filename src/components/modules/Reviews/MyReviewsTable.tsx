@@ -15,14 +15,6 @@ interface MyReviewsTableProps {
 }
 
 const MyReviewsTable = ({ reviews }: MyReviewsTableProps) => {
-  if (reviews.length === 0) {
-    return (
-      <div className="text-center py-8 text-muted-foreground">
-        No reviews found.
-      </div>
-    );
-  }
-
   return (
     <div className="border rounded-lg overflow-hidden">
       <Table>
@@ -36,10 +28,21 @@ const MyReviewsTable = ({ reviews }: MyReviewsTableProps) => {
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {reviews.map((review) => (
-            <ReviewTableRow key={review._id} review={review} />
-          ))}
+        <TableBody className="bg-white">
+          {reviews.length === 0 ? (
+            <TableRow>
+              <td
+                colSpan={6}
+                className="text-center py-8 text-muted-foreground"
+              >
+                No reviews found.
+              </td>
+            </TableRow>
+          ) : (
+            reviews.map((review) => (
+              <ReviewTableRow key={review._id} review={review} />
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

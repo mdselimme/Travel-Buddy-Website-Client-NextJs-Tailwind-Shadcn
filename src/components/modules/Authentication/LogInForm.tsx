@@ -54,7 +54,6 @@ export function LoginForm({
     };
     try {
       const result = await authLogIn(logInData);
-
       toast.success(result.message || "Logged in successfully.");
       const requestedPath = redirect || getDefaultDashboardRoute(result.role);
       if (!result?.data?.isProfileCompleted) {
@@ -66,13 +65,11 @@ export function LoginForm({
       router.push(redirect || getDefaultDashboardRoute(result.role));
     } catch (error: any) {
       const msg = error?.message || "Something went wrong. Please try again.";
-
       // Custom redirection
       if (msg.includes("not verified")) {
         router.push(`/verify-email?email=${data.email}`);
         return;
       }
-
       toast.error(msg);
     }
   };
