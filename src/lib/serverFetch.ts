@@ -1,45 +1,58 @@
 import { getNewAccessToken } from "@/actions/auth/refreshToken";
 import { getCookie } from "./tokenHandlers";
 
+const SERVER_API_URL =
+    process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
 
-const SERVER_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
-
-
-
-// /auth/login
-const serverFetchHelper = async (endpoint: string, options: RequestInit): Promise<Response> => {
-
-    const { headers, next, cache, ...restOptions } = options;
+const serverFetchHelper = async (
+    endpoint: string,
+    options: RequestInit
+): Promise<Response> => {
     const accessToken = await getCookie("accessToken");
 
-    //to stop recursion loop
-    if (endpoint !== "/auth/refresh-token") {
-        await getNewAccessToken();
+    const makeRequest = () =>
+        fetch(`${SERVER_API_URL}${endpoint}`, {
+            ...options,
+            credentials: "include", // ✅ cookies handled by browser
+            headers: {
+                ...(options.headers || {}),
+                ...(accessToken
+                    ? { Authorization: `${accessToken}` }
+                    : {}),
+            },
+        });
+
+    // First attempt
+    let response = await makeRequest();
+
+    console.log({ response })
+
+    // Refresh ONLY on 401
+    if (response.status === 401 && endpoint !== "/auth/refresh-token") {
+        const refreshed = await getNewAccessToken();
+
+        if (refreshed?.success) {
+            // Retry once after refresh
+            response = await makeRequest();
+        }
     }
 
-    const response = await fetch(`${SERVER_API_URL}${endpoint}`, {
-        headers: {
-            Cookie: accessToken ? `accessToken=${accessToken}` : "",
-            ...headers,
-        },
-        credentials: "include",
-        next,
-        cache,
-        ...restOptions,
-    })
-
     return response;
-}
+};
 
 export const serverFetch = {
-    get: async (endpoint: string, options: RequestInit = {}): Promise<Response> => serverFetchHelper(endpoint, { ...options, method: "GET" }),
+    get: (endpoint: string, options: RequestInit = {}) =>
+        serverFetchHelper(endpoint, { ...options, method: "GET" }),
 
-    post: async (endpoint: string, options: RequestInit = {}): Promise<Response> => serverFetchHelper(endpoint, { ...options, method: "POST" }),
+    post: (endpoint: string, options: RequestInit = {}) =>
+        serverFetchHelper(endpoint, { ...options, method: "POST" }),
 
-    put: async (endpoint: string, options: RequestInit = {}): Promise<Response> => serverFetchHelper(endpoint, { ...options, method: "PUT" }),
+    put: (endpoint: string, options: RequestInit = {}) =>
+        serverFetchHelper(endpoint, { ...options, method: "PUT" }),
 
-    patch: async (endpoint: string, options: RequestInit = {}): Promise<Response> => serverFetchHelper(endpoint, { ...options, method: "PATCH" }),
+    patch: (endpoint: string, options: RequestInit = {}) =>
+        serverFetchHelper(endpoint, { ...options, method: "PATCH" }),
 
-    delete: async (endpoint: string, options: RequestInit = {}): Promise<Response> => serverFetchHelper(endpoint, { ...options, method: "DELETE" }),
-
-}
+    delete: (endpoint: string, options: RequestInit = {}) =>
+        serverFetchHelper(endpoint, { ...options, method: "DELETE" }),
+};
