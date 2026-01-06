@@ -12,23 +12,23 @@ export async function proxy(request: NextRequest) {
 
     const pathname = request.nextUrl.pathname;
 
-    const hasTokenRefreshedParam = request.nextUrl.searchParams.get('tokenRefreshed');
+    const hasTokenRefreshedParam = request.nextUrl.searchParams.has('tokenRefreshed');
 
     if (hasTokenRefreshedParam) {
         const url = request.nextUrl.clone();
         url.searchParams.delete('tokenRefreshed');
-        return Response.redirect(url);
+        return NextResponse.redirect(url);
     };
 
     const resultOfTokenRefresh = await getNewAccessToken();
 
-    if (resultOfTokenRefresh.tokenRefreshed) {
+    if (resultOfTokenRefresh?.tokenRefreshed) {
         const url = request.nextUrl.clone();
         url.searchParams.set('tokenRefreshed', 'true');
         return NextResponse.redirect(url);
     };
 
-    const accessToken = await getCookie("accessToken");
+    const accessToken = await getCookie("accessToken") || null;
 
     let userRole: UserRole | null = null;
 
