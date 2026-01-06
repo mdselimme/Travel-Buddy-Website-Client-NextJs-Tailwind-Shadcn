@@ -1,17 +1,21 @@
 "use server"
+import { serverFetch } from "@/lib/serverFetch";
 import { IResetPasswordInput } from "@/types/auth.types";
 
 
 //FORGOT PASSWORD EMAIL SEND ACTION
 export const forgotPasswordEmailSend = async (email: string) => {
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/forgot-password`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-    });
+    const response = await serverFetch.post(
+        `/auth/forgot-password`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email }),
+        }
+    );
 
     const data = await response.json();
 

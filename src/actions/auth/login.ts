@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
+import { serverFetch } from "@/lib/serverFetch";
 import { setCookie } from "@/lib/tokenHandlers";
 import { IAuthLogin, IJwtPayload, UserRole } from "@/types/auth.types";
 import { parse } from "cookie";
@@ -9,8 +10,9 @@ import jwt from "jsonwebtoken";
 export const authLogIn = async (credentials: IAuthLogin) => {
     let accessTokenObject: null | any = null;
     let refreshTokenObject: null | any = null;
-    const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+
+    const response = await serverFetch.post(
+        `/auth/login`,
         {
             method: "POST",
             headers: { "Content-Type": "application/json" },
