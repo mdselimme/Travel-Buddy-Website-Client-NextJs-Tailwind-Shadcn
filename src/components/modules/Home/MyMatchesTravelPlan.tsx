@@ -1,5 +1,5 @@
 "use server";
-import { getAllTravelsPlans } from "@/actions/TravelPlan/getAllTravelPlans";
+import { getAllTravelPlansForUsers } from "@/actions/TravelPlan/getAllTravelPlansForUsers";
 import { getMyMatchesTravelPlan } from "@/actions/TravelPlan/getMyMatchesTravelPlan";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,12 +21,12 @@ const MyMatchesTravelPlan = async () => {
     travelPlans = myMatches?.slice(0, 3) || [];
     if (travelPlans.length === 0) {
       // If no matched plans, fetch all travel plans as fallback
-      const { data: allPlans } = await getAllTravelsPlans();
+      const { data: allPlans } = await getAllTravelPlansForUsers();
       travelPlans = allPlans?.slice(0, 3) || [];
     }
   } else {
     // Fetch all travel plans
-    const { data: allPlans } = await getAllTravelsPlans();
+    const { data: allPlans } = await getAllTravelPlansForUsers();
     travelPlans = allPlans?.slice(0, 3) || [];
   }
 

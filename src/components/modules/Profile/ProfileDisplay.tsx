@@ -123,17 +123,6 @@ export default function ProfileDisplay({
                   </span>
                 </div>
               </div>
-
-              {/* Subscription Status Badge */}
-              <div className="mt-3 sm:mt-4 flex justify-center sm:justify-start">
-                {profile.isSubscribed ? (
-                  <Badge className="bg-green-500 text-white hover:bg-green-600">
-                    Premium Member
-                  </Badge>
-                ) : (
-                  <Badge variant="outline">Free Member</Badge>
-                )}
-              </div>
             </div>
           </div>
         </CardHeader>
@@ -142,10 +131,10 @@ export default function ProfileDisplay({
       {/* Bio Section */}
       {profile.bio && (
         <Card className="mb-4 sm:mb-6">
-          <CardHeader className="p-4 sm:p-6">
+          <CardHeader className="p-4 sm:p-4">
             <CardTitle className="text-lg sm:text-xl">About</CardTitle>
           </CardHeader>
-          <CardContent className="p-4 sm:p-6 pt-0">
+          <CardContent className="p-4 sm:p-4 pt-0">
             <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
               {profile.bio}
             </p>

@@ -62,13 +62,6 @@ export default function HostProfileCard({
         </div>
       )}
 
-      {/* Subscription Status */}
-      {profile.isSubscribed && (
-        <div className="flex justify-center mb-4">
-          <Badge className="bg-green-600 text-white">Premium Member</Badge>
-        </div>
-      )}
-
       <Separator className="my-4" />
 
       {/* Contact Information */}

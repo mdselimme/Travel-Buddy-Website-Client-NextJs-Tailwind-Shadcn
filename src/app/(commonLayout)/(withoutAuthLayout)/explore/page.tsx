@@ -1,4 +1,4 @@
-import { getAllTravelsPlans } from "@/actions/TravelPlan/getAllTravelPlans";
+import { getAllTravelPlansForUsers } from "@/actions/TravelPlan/getAllTravelPlansForUsers";
 import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import {
   ExploreHero,
@@ -20,7 +20,7 @@ const ExplorePage = async ({
   const resolvedSearchParams = await searchParams;
 
   const { search, startDate, travelType } = resolvedSearchParams;
-  const { data: allTravelPlans } = await getAllTravelsPlans({
+  const { data: allTravelPlans } = await getAllTravelPlansForUsers({
     search: Array.isArray(search) ? search[0] : search,
     startDate: Array.isArray(startDate) ? startDate[0] : startDate,
     travelType: Array.isArray(travelType) ? travelType[0] : travelType,
