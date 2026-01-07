@@ -1,4 +1,4 @@
-import { getMyMatches } from "@/actions/matches/getMyMatches";
+import { getMyTravelPlanMatches } from "@/actions/matches/getMyTravelPlanMatches";
 import { getTravelPlanById } from "@/actions/TravelPlan/getTravelPlanById";
 import { getTravelPlanReviews } from "@/actions/TravelPlan/getTravelPlanReviews";
 import MatchesTable from "@/components/modules/MyMatches/MatchesTable";
@@ -22,12 +22,12 @@ const ManageTravelPlans = async ({
 }) => {
   const { id } = await params;
   const plan = (await getTravelPlanById(id)) as ITravelPlan;
-  const myMatches = (await getMyMatches()) as IMatch[];
+  const myTravelPlanMatches = (await getMyTravelPlanMatches(id)) as IMatch[];
   const myTravelPlanReviews = (await getTravelPlanReviews(
     id
   )) as IMyTravelPlanReviews[];
 
-  if (!myMatches || myMatches.length === 0) {
+  if (!myTravelPlanMatches || myTravelPlanMatches.length === 0) {
     return (
       <div className="space-y-6">
         <div>
@@ -65,7 +65,7 @@ const ManageTravelPlans = async ({
           <CardTitle>Travel Plan Matches</CardTitle>
         </CardHeader>
         <CardContent>
-          <MatchesTable matches={myMatches} />
+          <MatchesTable matches={myTravelPlanMatches} />
         </CardContent>
       </Card>
 

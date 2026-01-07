@@ -108,6 +108,17 @@ export default function CreateNewPlanForm({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
+  // Get today's date in local timezone (YYYY-MM-DD format)
+  const getTodayLocalDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const todayDate = getTodayLocalDate();
+
   const form = useForm<PlanFormData>({
     resolver: zodResolver(planSchema),
     defaultValues: {
@@ -117,7 +128,7 @@ export default function CreateNewPlanForm({
         city: "",
         country: "",
       },
-      startDate: "",
+      startDate: todayDate,
       endDate: "",
       budgetRange: {
         min: 0,
@@ -164,7 +175,6 @@ export default function CreateNewPlanForm({
           ? error.message
           : "Error submitting form. Please try again."
       );
-      console.error("Error submitting form:", error);
     } finally {
       setIsSubmitting(false);
     }
@@ -321,11 +331,7 @@ export default function CreateNewPlanForm({
                   <FormItem>
                     <FormLabel>Start Date *</FormLabel>
                     <FormControl>
-                      <Input
-                        type="date"
-                        min={new Date().toISOString().split("T")[0]}
-                        {...field}
-                      />
+                      <Input type="date" min={todayDate} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -340,10 +346,7 @@ export default function CreateNewPlanForm({
                     <FormControl>
                       <Input
                         type="date"
-                        min={
-                          form.watch("startDate") ||
-                          new Date().toISOString().split("T")[0]
-                        }
+                        min={form.watch("startDate") || todayDate}
                         {...field}
                       />
                     </FormControl>
