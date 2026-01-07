@@ -14,6 +14,7 @@ export const deleteTravelPlanAction = async (travelId: string) => {
         }
         revalidateTag("my-travel-plans", { expire: 0 });
         revalidateTag("travel-plans", { expire: 0 });
+        revalidateTag("user-travel-plans", { expire: 0 });
         return data;
     } catch (error) {
         throw new Error(error instanceof Error ? error.message : "Error deleting travel plan.");

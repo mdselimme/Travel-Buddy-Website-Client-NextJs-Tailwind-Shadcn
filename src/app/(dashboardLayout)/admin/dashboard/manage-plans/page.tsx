@@ -1,4 +1,4 @@
-import { getAllTravelPlansForUsers } from "@/actions/TravelPlan/getAllTravelPlansForUsers";
+import { getAllTravelPlans } from "@/actions/TravelPlan/getAllTravelPlans";
 import ManageTravelPlansTable from "@/components/modules/TravelPlan/ManageTravelPlansTable";
 import { Metadata } from "next";
 export const dynamic = "force-dynamic";
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 const ManagePlanPage = async () => {
-  const { data: allTravelPlans } = await getAllTravelPlansForUsers();
+  const { data: allTravelPlans } = await getAllTravelPlans();
 
   return (
     <div>

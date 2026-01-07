@@ -29,6 +29,8 @@ import {
 import { ITravelPlan, TravelPlanStatus } from "@/types/travel.plan.types";
 import { Eye, Trash2, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
+import { deleteTravelPlanAction } from "@/actions/TravelPlan/deleteTravelPlan";
+import { toast } from "sonner";
 
 interface ManageTravelPlansTableProps {
   travelPlans: ITravelPlan[];
@@ -68,9 +70,8 @@ const getStatusBadge = (status: TravelPlanStatus) => {
 };
 
 export default function ManageTravelPlansTable({
-  travelPlans: initialPlans,
+  travelPlans,
 }: ManageTravelPlansTableProps) {
-  const [travelPlans, setTravelPlans] = useState<ITravelPlan[]>(initialPlans);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -78,11 +79,15 @@ export default function ManageTravelPlansTable({
     if (!deleteId) return;
     setIsDeleting(true);
     try {
-      // After successful deletion, remove from list
-      setTravelPlans(travelPlans.filter((plan) => plan._id !== deleteId));
-      setDeleteId(null);
+      const result = await deleteTravelPlanAction(deleteId);
+      if (result.success) {
+        toast.success(result.message || "Travel plan deleted successfully.");
+        setDeleteId(null);
+      }
     } catch (error) {
-      console.error("Delete failed:", error);
+      const msg =
+        error instanceof Error ? error.message : "Error deleting travel plan.";
+      toast.error(msg);
     } finally {
       setIsDeleting(false);
     }
@@ -169,7 +174,7 @@ export default function ManageTravelPlansTable({
           <div className="flex gap-4 justify-end">
             <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
+              onClick={() => handleDelete()}
               disabled={isDeleting}
               className="bg-destructive hover:bg-destructive/90"
             >
