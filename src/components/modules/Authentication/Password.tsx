@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 
@@ -8,12 +8,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 const Password = ({ ...field }) => {
-  const [isVisible, setIsVisible] = useState(false);
+  const id = useId();
+  const [isVisible, setIsVisible] = useState<boolean>(false);
+
+  const toggleVisibility = () => setIsVisible((prevState) => !prevState);
 
   return (
     <div className="w-full space-y-2">
       <div className="relative">
         <Input
+          id={id}
           type={isVisible ? "text" : "password"}
           placeholder="Password"
           className="pr-9"
@@ -21,9 +25,10 @@ const Password = ({ ...field }) => {
           {...field}
         />
         <Button
+          type="button"
           variant="ghost"
           size="icon"
-          onClick={() => setIsVisible((prevState) => !prevState)}
+          onClick={toggleVisibility}
           className="text-muted-foreground focus-visible:ring-ring/50 absolute inset-y-0 right-0 rounded-l-none hover:bg-transparent"
         >
           {isVisible ? <EyeOffIcon /> : <EyeIcon />}

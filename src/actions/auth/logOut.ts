@@ -5,18 +5,19 @@ import { deleteCookie } from "@/lib/tokenHandlers";
 
 
 export const logOutUser = async () => {
+    try {
+        const response = await serverFetch.post("/auth/logout");
 
-    const response = await serverFetch.post("/auth/logout");
+        const data = await response.json();
 
-    const data = await response.json();
+        if (!response.ok || data.success === false) {
+            throw new Error(data.message || "Failed to log out");
+        }
+        await deleteCookie("accessToken");
+        await deleteCookie("refreshToken");
 
-    if (!response.ok || data.success === false) {
-        throw new Error(data.message || "Failed to log out");
+        return data;
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Error logging out user.");
     }
-
-    await deleteCookie("accessToken");
-    await deleteCookie("refreshToken");
-
-
-    return data;
 };

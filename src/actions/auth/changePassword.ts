@@ -7,17 +7,21 @@ interface ChangePasswordInput {
 }
 
 export const changePasswordAction = async (passwordData: ChangePasswordInput) => {
-    const response = await serverFetch.post('/auth/change-password', {
-        body: JSON.stringify(passwordData),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    });
+    try {
+        const response = await serverFetch.post('/auth/change-password', {
+            body: JSON.stringify(passwordData),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
 
-    const data = await response.json();
+        const data = await response.json();
 
-    if (!response.ok || data.success === false) {
-        throw new Error(data.message || "Failed to change password.");
+        if (!response.ok || data.success === false) {
+            throw new Error(data.message || "Failed to change password.");
+        }
+        return data;
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Error changing password.");
     }
-    return data;
 };

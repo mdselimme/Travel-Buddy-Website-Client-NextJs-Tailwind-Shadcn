@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -52,27 +51,31 @@ export function LoginForm({
       email: data.email,
       password: data.password,
     };
-    try {
-      const result = await authLogIn(logInData);
+
+    const result = await authLogIn(logInData);
+
+    if (result && !result.success) {
+      if (result.message.includes("not verified")) {
+        toast.error(result.message || "Email not verified.");
+        router.push(`/verify-email?email=${data.email}`);
+        return;
+      }
+    }
+
+    if (result.success) {
       toast.success(result.message || "Logged in successfully.");
-      const requestedPath = redirect || getDefaultDashboardRoute(result.role);
+      const requestedPath =
+        redirect || getDefaultDashboardRoute(result?.data?.role);
       if (!result?.data?.isProfileCompleted) {
-        if (isValidRedirectForRole(redirect, result.role)) {
+        if (isValidRedirectForRole(redirect, result.data.role)) {
           router.push(`/my-profile?redirect=${requestedPath}`);
           return;
         }
       }
-      router.push(redirect || getDefaultDashboardRoute(result.role));
-    } catch (error: any) {
-      const msg = error?.message || "Something went wrong. Please try again.";
-      // Custom redirection
-      if (msg.includes("not verified")) {
-        router.push(`/verify-email?email=${data.email}`);
-        return;
-      }
-      toast.error(msg);
+      router.push(requestedPath);
     }
   };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
@@ -128,7 +131,10 @@ export function LoginForm({
             >
               Forgot your password?
             </Link>
-            <Button type="submit" className="w-full text-white rounded-full">
+            <Button
+              type="submit"
+              className="w-full text-white rounded-full cursor-pointer"
+            >
               Log In
             </Button>
           </form>
@@ -138,16 +144,7 @@ export function LoginForm({
             Or
           </span>
         </div>
-        {/* <Button
-          onClick={() => {
-            window.open(`${config.baseUrl}/auth/google`);
-          }}
-          variant="outline"
-          className="w-full"
-        >
-          <GoogleLogo />
-          Login with Google
-        </Button> */}
+        {/* Sign in with google button will be added  */}
       </div>
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}

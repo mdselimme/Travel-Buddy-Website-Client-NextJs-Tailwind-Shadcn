@@ -28,18 +28,22 @@ export const forgotPasswordEmailSend = async (email: string) => {
 
 //RESET PASSWORD ACTION
 export const resetPasswordAction = async (resetData: IResetPasswordInput) => {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(resetData),
-    });
-    const data = await response.json();
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(resetData),
+        });
+        const data = await response.json();
 
-    if (!response.ok || data.success === false) {
-        throw new Error(data.message || "Failed to reset password.");
+        if (!response.ok || data.success === false) {
+            throw new Error(data.message || "Failed to reset password.");
+        }
+
+        return data;
+    } catch (error) {
+        throw new Error(error instanceof Error ? error.message : "Error resetting password.");
     }
-
-    return data;
 };

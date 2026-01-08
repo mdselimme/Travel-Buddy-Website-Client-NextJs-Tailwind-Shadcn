@@ -184,7 +184,10 @@ export function RegisterForm({
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full text-white rounded-full">
+            <Button
+              type="submit"
+              className="w-full text-white rounded-full cursor-pointer"
+            >
               Sign Up
             </Button>
           </form>
@@ -194,16 +197,7 @@ export function RegisterForm({
             Or
           </span>
         </div>
-        {/* <Button
-          onClick={() => {
-            window.open(`${config.baseUrl}/auth/google`);
-          }}
-          variant="outline"
-          className="w-full"
-        >
-          <GoogleLogo />
-          Login with Google
-        </Button> */}
+        {/* Sign in with google button will be added  */}
       </div>
       <div className="text-center text-sm">
         Already have an account?{" "}
