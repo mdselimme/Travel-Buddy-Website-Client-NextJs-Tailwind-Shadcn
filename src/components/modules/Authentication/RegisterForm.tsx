@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -71,20 +70,20 @@ export function RegisterForm({
   });
 
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
-    try {
-      const userData = {
-        fullName: data.fullName,
-        email: data.email,
-        password: data.password,
-      };
-      const result = await registerUser(userData);
-      if (result.success) {
-        router.push("/login");
-        toast.success(result.message || "Registration successful");
-      }
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.message || "Failed to register user");
+    const userData = {
+      fullName: data.fullName,
+      email: data.email,
+      password: data.password,
+    };
+    const result = await registerUser(userData);
+
+    if (!result.success) {
+      toast.error(result.message || "Error registering user.");
+      return;
+    }
+    if (result.success) {
+      router.push("/login");
+      toast.success(result.message || "Registration successful");
     }
   };
 

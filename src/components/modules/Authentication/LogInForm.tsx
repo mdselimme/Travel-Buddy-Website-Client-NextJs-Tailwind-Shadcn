@@ -51,13 +51,15 @@ export function LoginForm({
       email: data.email,
       password: data.password,
     };
-
     const result = await authLogIn(logInData);
 
-    if (result && !result.success) {
+    if (!result.success) {
       if (result.message.includes("not verified")) {
         toast.error(result.message || "Email not verified.");
         router.push(`/verify-email?email=${data.email}`);
+        return;
+      } else {
+        toast.error(result.message || "Error logging in user.");
         return;
       }
     }

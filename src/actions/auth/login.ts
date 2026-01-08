@@ -24,7 +24,7 @@ export const authLogIn = async (credentials: IAuthLogin) => {
         const data = await response.json();
 
         if (!response.ok || data.success === false) {
-            throw new Error(data.message || "Login failed. Please try again.");
+            throw new Error(data.message || "Login failed.");
         }
 
         const getCookieHeader = response.headers.getSetCookie();
@@ -69,7 +69,7 @@ export const authLogIn = async (credentials: IAuthLogin) => {
         });
 
         return data;
-    } catch (error: any) {
+    } catch (error) {
         return {
             success: false,
             message: error instanceof Error ? error.message : "Error logging in user.",
