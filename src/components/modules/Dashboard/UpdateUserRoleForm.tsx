@@ -66,7 +66,7 @@ export default function UpdateUserRoleForm() {
       return;
     }
     if (result.success) {
-      setSuccessMessage(`Successfully updated user role for ${data.email}`);
+      setSuccessMessage(result.message || "User role updated successfully.");
       form.reset();
     }
     setIsLoading(false);
