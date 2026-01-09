@@ -46,7 +46,6 @@ type UpdateUserRoleInput = z.infer<typeof updateUserRoleSchema>;
 
 export default function UpdateUserRoleForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
 
   const form = useForm<UpdateUserRoleInput>({
     resolver: zodResolver(updateUserRoleSchema),
@@ -58,7 +57,6 @@ export default function UpdateUserRoleForm() {
 
   const onSubmit = async (data: UpdateUserRoleInput) => {
     setIsLoading(true);
-    setSuccessMessage("");
     const result = await userRoleUpdateAction(data);
     if (!result.success) {
       toast.error(result.message || "Failed to update user role.");
@@ -66,7 +64,7 @@ export default function UpdateUserRoleForm() {
       return;
     }
     if (result.success) {
-      setSuccessMessage(result.message || "User role updated successfully.");
+      toast.success(result.message || "User role updated successfully.");
       form.reset();
     }
     setIsLoading(false);
@@ -127,13 +125,6 @@ export default function UpdateUserRoleForm() {
                 </FormItem>
               )}
             />
-
-            {/* Success Message */}
-            {successMessage && (
-              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-md text-sm">
-                {successMessage}
-              </div>
-            )}
 
             {/* Submit Button */}
             <Button

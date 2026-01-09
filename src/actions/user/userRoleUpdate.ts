@@ -21,7 +21,7 @@ export const userRoleUpdateAction = async (inputData: IInputData) => {
             throw new Error(data.message || "Failed to fetch user roles.");
         }
         revalidateTag("users", { expire: 0 });
-        return data.data;
+        return data;
     } catch (error) {
         return {
             success: false,
