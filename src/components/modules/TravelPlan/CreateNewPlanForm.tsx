@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -140,6 +140,12 @@ export default function CreateNewPlanForm({
     },
   });
 
+  const watchedStartDate = useWatch({
+    control: form.control,
+    name: "startDate",
+    defaultValue: todayDate,
+  });
+
   const {
     fields: itineraryFields,
     append: appendItinerary,
@@ -151,33 +157,28 @@ export default function CreateNewPlanForm({
 
   const handleSubmit = async (data: PlanFormData) => {
     setIsSubmitting(true);
-    try {
-      // Create FormData object for file upload
-      const formData = new FormData();
+    const formData = new FormData();
 
-      formData.append("data", JSON.stringify({ ...data, user: userId }));
+    formData.append("data", JSON.stringify({ ...data, user: userId }));
 
-      if (imageFile) {
-        formData.append("file", imageFile);
-      }
-
-      const response = await createTravelPlanAction(formData);
-      if (response && response.success) {
-        // Reset form on success
-        form.reset();
-        setImagePreview(null);
-        toast.success(response.message || "Travel plan created successfully!");
-        router.push("/dashboard/my-plans");
-      }
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Error submitting form. Please try again."
-      );
-    } finally {
-      setIsSubmitting(false);
+    if (imageFile) {
+      formData.append("file", imageFile);
     }
+
+    const response = await createTravelPlanAction(formData);
+    if (!response.success) {
+      toast.error(response.message || "Failed to create travel plan.");
+      setIsSubmitting(false);
+      return;
+    }
+    if (response && response.success) {
+      // Reset form on success
+      form.reset();
+      setImagePreview(null);
+      toast.success(response.message || "Travel plan created successfully!");
+      router.push("/dashboard/my-plans");
+    }
+    setIsSubmitting(false);
   };
 
   const travelTypeOptions = travelTypes || [];
@@ -346,7 +347,7 @@ export default function CreateNewPlanForm({
                     <FormControl>
                       <Input
                         type="date"
-                        min={form.watch("startDate") || todayDate}
+                        min={watchedStartDate || todayDate}
                         {...field}
                       />
                     </FormControl>

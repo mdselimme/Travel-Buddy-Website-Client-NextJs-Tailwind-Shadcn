@@ -8,15 +8,21 @@ import { ITravelPlan } from "@/types/travel.plan.types";
 import { Calendar, MapPin, Wallet } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getUserRole } from "@/actions/user/getUserRole";
 
 const MyMatchesTravelPlan = async () => {
   const token = await getCookie("accessToken");
   const isLoggedIn = !!token;
 
   let travelPlans: ITravelPlan[] = [];
+  let userRole: string | null = null;
 
   if (isLoggedIn) {
-    // Fetch user's matched travel plans
+    userRole = await getUserRole();
+  }
+
+  if (isLoggedIn && userRole === "USER") {
+    // For USER role: Fetch user's matched travel plans
     const myMatches = await getMyMatchesTravelPlan();
     travelPlans = myMatches?.slice(0, 3) || [];
     if (travelPlans.length === 0) {
@@ -25,7 +31,7 @@ const MyMatchesTravelPlan = async () => {
       travelPlans = allPlans?.slice(0, 3) || [];
     }
   } else {
-    // Fetch all travel plans
+    // For non-logged-in users or ADMIN/SUPER_ADMIN: Fetch all travel plans
     const { data: allPlans } = await getAllTravelPlansForUsers();
     travelPlans = allPlans?.slice(0, 3) || [];
   }
@@ -42,12 +48,12 @@ const MyMatchesTravelPlan = async () => {
     <div className="space-y-6 container mx-auto my-8 px-4">
       <div className="text-center py-8">
         <h2 className="text-4xl font-bold mb-2 text-gray-900">
-          {isLoggedIn
+          {isLoggedIn && userRole === "USER"
             ? "🎯 Your Matched Travel Plans"
             : "🌍 Explore Travel Plans"}
         </h2>
         <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-          {isLoggedIn
+          {isLoggedIn && userRole === "USER"
             ? "Travel plans matched with your interests"
             : "Discover exciting travel opportunities"}
         </p>

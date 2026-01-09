@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { forgotPasswordEmailSend } from "@/actions/auth/forgotPassword";
 import WebLogo from "@/assets/icons/WebLogo";
@@ -47,12 +46,16 @@ export function ForgotPasswordForm({
   });
 
   const onSubmit = async (data: z.infer<typeof emailSchema>) => {
-    try {
-      const result = await forgotPasswordEmailSend(data.email);
+    const result = await forgotPasswordEmailSend(data.email);
+    if (!result.success) {
+      toast.error(result.message || "Error sending reset link.");
+      return;
+    }
+    if (result.success) {
       router.push("/login");
-      toast.success(result.message || "Reset link sent to your email.");
-    } catch (error: any) {
-      toast.error(error?.message || "Failed to send reset link.");
+      toast.success(
+        result.message || "Password reset link sent! Please check your email."
+      );
     }
   };
 

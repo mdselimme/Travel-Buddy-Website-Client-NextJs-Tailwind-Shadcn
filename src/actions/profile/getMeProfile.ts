@@ -4,7 +4,7 @@ import { serverFetch } from "@/lib/serverFetch";
 
 export const getMeProfile = async () => {
     const response = await serverFetch.get("/profile/me", {
-        cache: "force-cache",
+        cache: "no-store",
         next: {
             tags: ["user-profile"]
         }

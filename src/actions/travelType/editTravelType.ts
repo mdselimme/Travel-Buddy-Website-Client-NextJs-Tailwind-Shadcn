@@ -24,7 +24,9 @@ export const editTravelTypeAction = async (data: IEditTravelType) => {
         revalidateTag("TRAVEL-TYPES", { expire: 0 });
         return resData;
     } catch (error) {
-        console.log("Error in editTravelTypeAction:", error);
-        throw new Error(error instanceof Error ? error.message : "Error editing travel type.");
+        return {
+            success: false,
+            message: error instanceof Error ? error.message : "An unexpected error occurred",
+        }
     }
 };

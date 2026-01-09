@@ -5,25 +5,32 @@ import { IResetPasswordInput } from "@/types/auth.types";
 
 //FORGOT PASSWORD EMAIL SEND ACTION
 export const forgotPasswordEmailSend = async (email: string) => {
+    try {
 
-    const response = await serverFetch.post(
-        `/auth/forgot-password`,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ email }),
+        const response = await serverFetch.post(
+            `/auth/forgot-password`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email }),
+            }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok || data.success === false) {
+            throw new Error(data.message || "Failed to send reset link.");
         }
-    );
 
-    const data = await response.json();
-
-    if (!response.ok || data.success === false) {
-        throw new Error(data.message || "Failed to send reset link.");
+        return data;
+    } catch (error) {
+        return {
+            success: false,
+            message: error instanceof Error ? error.message : "Error sending reset link.",
+        }
     }
-
-    return data;
 };
 
 //RESET PASSWORD ACTION

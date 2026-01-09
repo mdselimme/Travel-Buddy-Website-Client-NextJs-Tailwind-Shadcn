@@ -21,6 +21,9 @@ export const createTravelPlanAction = async (travelPlanData: FormData) => {
         revalidateTag("my-travel-plans", { expire: 0 });
         return data;
     } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Error creating travel plan.");
+        return {
+            success: false,
+            message: error instanceof Error ? error.message : "An unexpected error occurred",
+        }
     }
-};
+}

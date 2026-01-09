@@ -70,26 +70,22 @@ const EditTravelTypeModal = ({
   const onSubmit = async (data: z.infer<typeof TravelTypeFormData>) => {
     if (!travelType) return;
 
-    try {
-      setIsLoading(true);
-      const result = await editTravelTypeAction({
-        travelId: travelType._id,
-        typeName: data.typeName,
-      });
-      if (result.success) {
-        toast.success(result.message || "Travel type updated successfully!");
-      }
-      onClose();
-      onSuccess?.();
-    } catch (error) {
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred. Please try again."
-      );
-    } finally {
+    setIsLoading(true);
+    const result = await editTravelTypeAction({
+      travelId: travelType._id,
+      typeName: data.typeName,
+    });
+    if (!result.success) {
+      toast.error(result.message || "Failed to update travel type.");
       setIsLoading(false);
+      return;
     }
+    if (result.success) {
+      toast.success(result.message || "Travel type updated successfully!");
+    }
+    onClose();
+    onSuccess?.();
+    setIsLoading(false);
   };
 
   return (
