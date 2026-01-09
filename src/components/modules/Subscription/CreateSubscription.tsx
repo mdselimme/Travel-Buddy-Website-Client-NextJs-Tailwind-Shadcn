@@ -73,8 +73,6 @@ export default function CreateSubscription({}) {
       currency: values.currency,
     };
 
-    console.log({ submitData });
-
     const result = await createSubscriptionAction(submitData);
     if (!result.success) {
       toast.error(result.message || "Error creating subscription.");

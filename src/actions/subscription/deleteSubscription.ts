@@ -1,4 +1,6 @@
+"use server"
 import { serverFetch } from "@/lib/serverFetch";
+import { revalidateTag } from "next/cache";
 
 
 export const deleteSubscriptionAction = async (subscriptionId: string) => {
@@ -7,12 +9,14 @@ export const deleteSubscriptionAction = async (subscriptionId: string) => {
             headers: {
                 "Content-Type": "application/json",
             },
+
         });
         const data = await response.json();
 
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Failed to delete subscription");
         }
+        revalidateTag("subscriptions", { expire: 0 });
         return data;
     } catch (error) {
         return {

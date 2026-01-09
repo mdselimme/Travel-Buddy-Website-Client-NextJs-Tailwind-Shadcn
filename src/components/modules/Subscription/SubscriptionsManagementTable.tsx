@@ -18,8 +18,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ISubscription, SubscriptionPlan } from "@/types/subscription";
-import { Edit, MoreHorizontal } from "lucide-react";
+import { Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import EditSubscriptionModal from "./EditSubscriptionModal";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { deleteSubscriptionAction } from "@/actions/subscription/deleteSubscription";
+import { toast } from "sonner";
 
 interface SubscriptionWithId extends ISubscription {
   _id: string;
@@ -58,6 +70,13 @@ const getPlanBadge = (plan: SubscriptionPlan) => {
   return <Badge className={config.className}>{config.label}</Badge>;
 };
 
+const getStatusBadge = (isDeleted?: boolean) => {
+  if (isDeleted) {
+    return <Badge className="bg-red-600 text-white">Deleted</Badge>;
+  }
+  return <Badge className="bg-green-600 text-white">Active</Badge>;
+};
+
 export default function SubscriptionsManagementTable({
   subscriptions: initialSubscriptions,
 }: SubscriptionsManagementTableProps) {
@@ -67,6 +86,10 @@ export default function SubscriptionsManagementTable({
     useState<SubscriptionWithId | null>(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [subscriptionToDelete, setSubscriptionToDelete] =
+    useState<SubscriptionWithId | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleEditClick = (subscription: SubscriptionWithId) => {
     setEditingSubscription(subscription);
@@ -96,6 +119,27 @@ export default function SubscriptionsManagementTable({
     }
   };
 
+  const handleDeleteClick = (subscription: SubscriptionWithId) => {
+    setSubscriptionToDelete(subscription);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!subscriptionToDelete) return;
+    setIsDeleting(true);
+
+    const result = await deleteSubscriptionAction(subscriptionToDelete._id);
+    if (!result.success) {
+      toast.error(result.message || "Failed to delete subscription");
+      setIsDeleting(false);
+      return;
+    }
+    if (result.success) {
+      toast.success(result.message || "Subscription deleted successfully");
+    }
+    setIsDeleting(false);
+  };
+
   return (
     <>
       <div className="border rounded-lg overflow-hidden">
@@ -106,6 +150,7 @@ export default function SubscriptionsManagementTable({
               <TableHead className="font-semibold">Price</TableHead>
               <TableHead className="font-semibold">Currency</TableHead>
               <TableHead className="font-semibold">Discount</TableHead>
+              <TableHead className="font-semibold">Status</TableHead>
               <TableHead className="font-semibold">Created</TableHead>
               <TableHead className="text-right font-semibold">
                 Actions
@@ -141,6 +186,9 @@ export default function SubscriptionsManagementTable({
                       <span className="text-muted-foreground">N/A</span>
                     )}
                   </TableCell>
+                  <TableCell>
+                    {getStatusBadge(subscription.isDeleted)}
+                  </TableCell>
                   <TableCell>{formatDate(subscription.createdAt)}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -156,6 +204,13 @@ export default function SubscriptionsManagementTable({
                           <Edit className="w-4 h-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleDeleteClick(subscription)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash2 className="w-4 h-4 mr-2" />
+                          Soft Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -164,7 +219,7 @@ export default function SubscriptionsManagementTable({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={6}
+                  colSpan={7}
                   className="text-center py-8 text-muted-foreground"
                 >
                   No subscriptions found
@@ -183,6 +238,32 @@ export default function SubscriptionsManagementTable({
         onSubmit={handleEditSubmit}
         isLoading={isUpdating}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the{" "}
+              <span className="font-semibold">
+                {subscriptionToDelete?.plan}
+              </span>{" "}
+              subscription plan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfirm}
+              disabled={isDeleting}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              {isDeleting ? "Deleting..." : "Soft Delete"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

@@ -50,6 +50,11 @@ const MySubscriptionPage = async () => {
   const subscriptions = await getAllSubscription();
   const mePayments = await getMePayment();
 
+  // Filter out deleted subscriptions
+  const activeSubscriptions = subscriptions.filter(
+    (subscription) => !subscription.isDeleted
+  );
+
   return (
     <div>
       <div className="mt-5">
@@ -58,7 +63,7 @@ const MySubscriptionPage = async () => {
           Manage your personal subscription plan and billing information.
         </p>
       </div>
-      <MySubscriptionCard subscriptions={subscriptions} />
+      <MySubscriptionCard subscriptions={activeSubscriptions} />
 
       {/* Payment History Table */}
       <div className="mt-10">
