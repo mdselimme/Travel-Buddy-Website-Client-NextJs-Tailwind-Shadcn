@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: `Travel Buddy Social - ${new Date().getFullYear()}`,
+  title: `Travel Buddy Social || ${new Date().getFullYear()}`,
   description:
     "Travel Buddy Social is a platform to connect travelers around the world.",
 };

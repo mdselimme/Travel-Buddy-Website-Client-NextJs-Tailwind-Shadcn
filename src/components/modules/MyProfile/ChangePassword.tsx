@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@/components/ui/button";
@@ -51,18 +49,20 @@ const ChangePasswordForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof updatePasswordSchema>) {
-    try {
-      const updateData = {
-        oldPassword: values.oldPassword,
-        newPassword: values.newPassword,
-      };
-      const result = await changePasswordAction(updateData);
-      if (result?.success) {
-        router.push("/my-profile");
-        toast.success("Update Password Successfully.");
-      }
-    } catch (error: any) {
-      toast.error(error?.message || "Update Password failed.");
+    const updateData = {
+      oldPassword: values.oldPassword,
+      newPassword: values.newPassword,
+    };
+    const result = await changePasswordAction(updateData);
+
+    if (!result.success) {
+      toast.error(result.message || "Error updating password.");
+      return;
+    }
+
+    if (result?.success) {
+      router.push("/my-profile");
+      toast.success("Update Password Successfully.");
     }
   }
   return (

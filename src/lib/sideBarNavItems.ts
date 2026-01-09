@@ -82,7 +82,13 @@ const superAdminNavItems: NavSection[] = [
                 href: '/admin/dashboard/admin-management',
                 icon: "ShieldCheck",
                 roles: ["SUPER_ADMIN"],
-            }
+            },
+            {
+                title: 'Subscription Add',
+                href: '/admin/dashboard/add-subscription',
+                icon: "PlusCircle",
+                roles: ["SUPER_ADMIN"],
+            },
         ]
     }
 ];

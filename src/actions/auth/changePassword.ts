@@ -22,6 +22,9 @@ export const changePasswordAction = async (passwordData: ChangePasswordInput) =>
         }
         return data;
     } catch (error) {
-        throw new Error(error instanceof Error ? error.message : "Error changing password.");
+        return {
+            success: false,
+            message: (error as Error).message || "Failed to change password."
+        };
     }
 };
