@@ -5,7 +5,9 @@ import { serverFetch } from "@/lib/serverFetch";
 
 export const getMePayment = async () => {
     try {
-        const response = await serverFetch.get("/payment/me");
+        const response = await serverFetch.get("/payment/me", {
+            cache: "no-store",
+        });
         const data = await response.json();
 
         if (!response.ok || !data.success) {
