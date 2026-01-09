@@ -28,6 +28,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { userRoleUpdateAction } from "@/actions/user/userRoleUpdate";
+import { toast } from "sonner";
 
 // Zod Schema
 const updateUserRoleSchema = z.object({
@@ -55,18 +57,19 @@ export default function UpdateUserRoleForm() {
   });
 
   const onSubmit = async (data: UpdateUserRoleInput) => {
-    try {
-      setIsLoading(true);
-      setSuccessMessage("");
-
-      // Example: const response = await updateUserRoleAction(data);
+    setIsLoading(true);
+    setSuccessMessage("");
+    const result = await userRoleUpdateAction(data);
+    if (!result.success) {
+      toast.error(result.message || "Failed to update user role.");
+      setIsLoading(false);
+      return;
+    }
+    if (result.success) {
       setSuccessMessage(`Successfully updated user role for ${data.email}`);
       form.reset();
-    } catch (error) {
-      console.error("Error updating user role:", error);
-    } finally {
-      setIsLoading(false);
     }
+    setIsLoading(false);
   };
 
   return (
