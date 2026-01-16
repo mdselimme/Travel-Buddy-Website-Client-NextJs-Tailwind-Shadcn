@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, useEffect } from "react";
-import { Menu, X, LogIn, UserRoundPlus, LogOut } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, LogIn, UserRoundPlus } from "lucide-react";
 import { Button } from "../ui/button";
 import WebLogo from "@/assets/icons/WebLogo";
 import Link from "next/link";
@@ -11,18 +10,22 @@ import {
   headerGuestNavItems,
   headerUserNavItems,
 } from "@/lib/headerNavItems";
-import { logOutUser } from "@/actions/auth/logOut";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { getCookie } from "@/lib/tokenHandlers";
+import UserDropdown from "../modules/Home/UserDropdown";
+import { IUser } from "@/types/user.types";
+import { IProfile } from "@/types/profile.types";
+import { getUserInfo } from "@/actions/user/getUserInfo";
+import { getProfileByUserId } from "@/actions/profile/getProfileByUserId";
 
 const PublicHeader = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
+  //for user and profile token.
   const [token, setToken] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<IUser | null>(null);
+  const [profileInfo, setProfileInfo] = useState<IProfile | null>(null);
 
-  const router = useRouter();
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
@@ -43,12 +46,22 @@ const PublicHeader = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  //user and profile and token load effect
   useEffect(() => {
     const fetchUserRole = async () => {
       const role = await getUserRole();
       setUserRole(role);
       const accessToken = await getCookie("accessToken");
       if (accessToken) {
+        const user = (await getUserInfo()) as IUser;
+        const profile = (await getProfileByUserId(user?._id)) as IProfile;
+        if (user?.email && profile.email) {
+          setUserInfo(user);
+          setProfileInfo(profile);
+        } else {
+          setUserInfo(null);
+          setProfileInfo(null);
+        }
         setToken(accessToken);
       } else {
         setToken(null);
@@ -66,19 +79,6 @@ const PublicHeader = () => {
   } else {
     navLinks = headerGuestNavItems;
   }
-
-  const handleLogOut = async () => {
-    try {
-      const result = await logOutUser();
-      if (result.success) {
-        setToken(null);
-        router.push("/login");
-        toast.success(result.message || "Logged out successfully");
-      }
-    } catch (error: any) {
-      toast.error(error.message || "Failed to log out");
-    }
-  };
 
   return (
     <header
@@ -115,15 +115,10 @@ const PublicHeader = () => {
           {/* Desktop CTA Buttons */}
           <div className="hidden md:flex items-center space-x-2 lg:space-x-3 shrink-0">
             {token ? (
-              <Button
-                onClick={handleLogOut}
-                className="text-white text-sm lg:text-base px-3 lg:px-4"
-                size="sm"
-              >
-                <span className="hidden lg:inline">LogOut</span>
-                <span className="lg:hidden">Out</span>
-                <LogOut className="h-4 w-4" />
-              </Button>
+              <UserDropdown
+                userInfo={userInfo as IUser}
+                profileInfo={profileInfo as IProfile}
+              />
             ) : (
               <>
                 <Link href="/register">
@@ -184,13 +179,12 @@ const PublicHeader = () => {
               ))}
               <div className="pt-3 mt-2 border-t border-gray-200 dark:border-gray-700 flex flex-col space-y-2.5">
                 {token ? (
-                  <Button
-                    onClick={handleLogOut}
-                    className="w-full text-white h-11 text-base touch-manipulation"
-                  >
-                    LogOut
-                    <LogOut className="h-4 w-4" />
-                  </Button>
+                  <div className="p-4">
+                    <UserDropdown
+                      userInfo={userInfo as IUser}
+                      profileInfo={profileInfo as IProfile}
+                    />
+                  </div>
                 ) : (
                   <>
                     <Link href="/register" className="w-full">
