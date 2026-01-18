@@ -1,5 +1,4 @@
 import Image from "next/image";
-import React from "react";
 import webLogo from "../images/travel-buddy-logo.webp";
 
 const WebLogo = () => {

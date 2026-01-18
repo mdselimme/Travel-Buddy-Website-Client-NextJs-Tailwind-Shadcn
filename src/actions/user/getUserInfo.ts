@@ -31,5 +31,5 @@ export const getUserInfo = async (): Promise<IUser | null> => {
             redirect("/login");
         }
         return null;
-    }
+    };
 };

@@ -12,6 +12,7 @@ export interface IMyReview {
 export interface Profile {
     _id: string
     fullName: string
+    profileImage: string
 }
 
 export interface TravelPlan {
@@ -22,6 +23,7 @@ export interface TravelPlan {
 export interface IReviewer {
     _id: string
     profile: Profile
+    profileImage: string
 }
 
 

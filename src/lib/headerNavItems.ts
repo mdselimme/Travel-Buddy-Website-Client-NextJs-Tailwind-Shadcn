@@ -8,6 +8,7 @@ export const headerGuestNavItems: IHeaderNavItem[] = [
     { href: "/", title: "Home", },
     { href: "/explore", title: "Explore", },
     { href: "/find-travel-buddy", title: "Find Travel Buddy", },
+    { href: "/reviews", title: "Reviews", },
 ];
 
 export const headerUserNavItems: IHeaderNavItem[] = [

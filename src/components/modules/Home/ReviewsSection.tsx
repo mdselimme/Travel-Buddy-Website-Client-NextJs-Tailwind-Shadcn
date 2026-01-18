@@ -2,40 +2,21 @@
 
 import { getAllReviews } from "@/actions/review/getAllReviews";
 import { IMyReview } from "@/types/myrevies.types";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, User } from "lucide-react";
+import { Star } from "lucide-react";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ReviewsSection = async () => {
   const { data: allReviews } = (await getAllReviews()) as { data: IMyReview[] };
 
   const displayedReviews = allReviews?.slice(0, 3) || [];
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            className={`h-4 w-4 ${
-              star <= rating
-                ? "fill-yellow-400 text-yellow-400"
-                : "text-gray-300"
-            }`}
-          />
-        ))}
-      </div>
-    );
-  };
 
   return (
     <div className="py-16 px-4 bg-gray-50">
@@ -56,46 +37,66 @@ const ReviewsSection = async () => {
             {/* Reviews Grid */}
             <div className="grid md:grid-cols-3 gap-8 mb-8">
               {displayedReviews.map((review) => {
-                // Determine which user left the review and their rating/description
-                const reviewerName = review?.reviewed.profile.fullName;
-                const reviewName = review?.reviewer.profile.fullName;
-                const rating = review?.rating;
-                const description = review?.description;
-
                 return (
                   <Card
                     key={review._id}
-                    className="hover:shadow-lg transition-shadow border-0 bg-white"
+                    className="flex flex-col h-full hover:shadow-lg transition-shadow duration-300"
                   >
-                    <CardHeader>
-                      <div className="flex items-start gap-4">
-                        <div className="bg-linear-to-br from-blue-100 to-cyan-100 w-12 h-12 rounded-full flex items-center justify-center">
-                          <User className="h-6 w-6 text-blue-600" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900">
-                            {reviewerName}
-                          </h3>
-                          <p className="text-sm text-gray-500">
-                            Reviewed: {reviewName}
-                          </p>
-                          <div className="mt-2">{renderStars(rating)}</div>
+                    <CardHeader className="flex flex-row items-center gap-4 py-4">
+                      <Avatar className="h-10 w-10 border">
+                        <AvatarImage
+                          src={review.reviewer.profile.profileImage} // Placeholder or dynamic if available in profile
+                          alt={review.reviewer.profile.fullName}
+                        />
+                        <AvatarFallback>
+                          {review.reviewer.profile.fullName
+                            .slice(0, 2)
+                            .toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <p className="text-sm font-semibold leading-none">
+                          {review.reviewer.profile.fullName}
+                        </p>
+                        <div className="flex items-center mt-1">
+                          {Array.from({ length: 5 }).map((_, index) => (
+                            <Star
+                              key={index}
+                              className={`w-3 h-3 ${
+                                index < review.rating
+                                  ? "text-yellow-500 fill-yellow-500"
+                                  : "text-gray-300"
+                              }`}
+                            />
+                          ))}
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-700 leading-relaxed line-clamp-4">
-                        {description}
+                    <CardContent className="grow py-2">
+                      <p className="text-sm text-gray-600 italic">
+                        &quot;{review.description}&quot;
                       </p>
-                      <div className="mt-4 pt-4 border-t border-gray-100">
-                        <p className="text-xs text-gray-400">
-                          {formatDate(review?.createdAt as string)}
-                        </p>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Trip: {review.travelPlan.travelTitle}
-                        </p>
-                      </div>
                     </CardContent>
+                    <CardFooter className="flex flex-col items-start gap-1 py-4 border-t bg-gray-50/50 rounded-b-xl">
+                      <p className="text-xs text-gray-500 font-medium">
+                        Trip:{" "}
+                        <span className="text-primary">
+                          {review.travelPlan.travelTitle}
+                        </span>
+                      </p>
+                      {review.createdAt && (
+                        <p className="text-xs text-gray-400">
+                          {new Date(review.createdAt).toLocaleDateString(
+                            undefined,
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            },
+                          )}
+                        </p>
+                      )}
+                    </CardFooter>
                   </Card>
                 );
               })}
