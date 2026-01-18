@@ -168,7 +168,7 @@ export default function PublicFooter() {
             <p className="text-foreground font-semibold">+88 (01) 737102354</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center md:justify-center gap-3">
           <Mail className="w-5 h-5 text-primary" />
           <div>
             <p className="text-muted-foreground text-sm">Email</p>
@@ -177,7 +177,7 @@ export default function PublicFooter() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center md:justify-end gap-3">
           <MapPin className="w-5 h-5 text-primary" />
           <div>
             <p className="text-muted-foreground text-sm">Address</p>

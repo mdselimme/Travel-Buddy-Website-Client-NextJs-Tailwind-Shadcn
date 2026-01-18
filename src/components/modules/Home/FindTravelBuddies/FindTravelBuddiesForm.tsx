@@ -26,7 +26,7 @@ const FindTravelBuddiesForm = ({ cities }: FindTravelBuddiesFormProps) => {
     <div className="space-y-2 sm:space-y-3 flex flex-col items-center">
       <label className="text-xs sm:text-sm font-semibold text-blue-100 flex items-center gap-1.5 sm:gap-2">
         <MapPin className="h-3 w-3 sm:h-4 sm:w-4" />
-        Choose Your Destination
+        Choose Your Destination From Our Available Cities
       </label>
       <div className="flex flex-col gap-3 sm:gap-4 items-center w-full max-w-md px-2 sm:px-0">
         <div className="w-full">
