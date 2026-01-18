@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import { ITravelType } from "@/types/travel.type";
-import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
+import { getAllTravelTypeUsers } from "../../../actions/travelType/getAllTravelTypeUsers";
 
 interface ViewTravelPlanModalProps {
   plan: ITravelPlan | null;
@@ -32,7 +32,7 @@ export default function ViewTravelPlanModal({
 
   useEffect(() => {
     const fetchTravelTypes = async () => {
-      const allTravelTypes = await getAllTravelType();
+      const allTravelTypes = await getAllTravelTypeUsers();
       setTravelTypeOptions(allTravelTypes.data);
     };
     fetchTravelTypes();
@@ -181,7 +181,7 @@ export default function ViewTravelPlanModal({
                         ? type
                         : (type as unknown as Record<string, string>)._id;
                     const travelType = travelTypeOptions.find(
-                      (t) => t._id === typeId
+                      (t) => t._id === typeId,
                     );
                     return (
                       <Badge

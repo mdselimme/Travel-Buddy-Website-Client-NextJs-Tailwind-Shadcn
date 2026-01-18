@@ -4,9 +4,9 @@ import HostProfileCard from "@/components/modules/TravelPlan/HostProfileCard";
 import RequestToJoinButton from "@/components/modules/TravelPlan/RequestToJoinButton";
 import Image from "next/image";
 import { getProfileByUserId } from "@/actions/profile/getProfileByUserId";
-import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import { ITravelType } from "@/types/travel.type";
 import { Metadata } from "next";
+import { getAllTravelTypeUsers } from "../../../../../actions/travelType/getAllTravelTypeUsers";
 
 export const metadata: Metadata = {
   title: `Travel Plan Details || Travel Buddy`,
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const TravelPlanDetails = async ({ params }: { params: { id: string } }) => {
   const { id } = await params;
   const travelPlan = await getTravelPlanById(id);
-  const { data: allTravelTypes } = await getAllTravelType();
+  const allTravelTypes = await getAllTravelTypeUsers();
 
   const hostProfile = travelPlan
     ? await getProfileByUserId(travelPlan.user)

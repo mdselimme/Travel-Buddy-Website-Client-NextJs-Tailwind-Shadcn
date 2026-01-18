@@ -34,9 +34,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { X, Plus, Upload } from "lucide-react";
 import { toast } from "sonner";
-import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import Image from "next/image";
 import { travelPlanUpdateAction } from "@/actions/TravelPlan/travelPlanUpdate";
+import { getAllTravelTypeUsers } from "@/actions/travelType/getAllTravelTypeUsers";
 
 const editPlanSchema = z.object({
   travelTitle: z.string().min(1, "Travel Title is required"),
@@ -126,7 +126,7 @@ export default function EditTravelPlanModal({
     setImageFile(null);
     setRemoveOriginalImage(true);
     const input = document.getElementById(
-      "edit-image-input"
+      "edit-image-input",
     ) as HTMLInputElement;
     if (input) input.value = "";
   };
@@ -134,7 +134,7 @@ export default function EditTravelPlanModal({
   // Update form when plan changes
   useEffect(() => {
     const fetchTravelTypes = async () => {
-      const allTravelTypes = await getAllTravelType();
+      const allTravelTypes = await getAllTravelTypeUsers();
       setTravelTypeOptions(allTravelTypes.data);
     };
     fetchTravelTypes();
@@ -145,7 +145,7 @@ export default function EditTravelPlanModal({
       // Extract only IDs from travelTypes array in case they are objects
       const travelTypeIds = Array.isArray(plan.travelTypes)
         ? plan.travelTypes.map((type) =>
-            typeof type === "string" ? type : (type as ITravelType)._id
+            typeof type === "string" ? type : (type as ITravelType)._id,
           )
         : [];
 
@@ -181,7 +181,7 @@ export default function EditTravelPlanModal({
       }
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Error updating plan"
+        error instanceof Error ? error.message : "Error updating plan",
       );
     } finally {
       setIsSubmitting(false);
@@ -408,7 +408,7 @@ export default function EditTravelPlanModal({
                       <div className="flex flex-wrap gap-2 mt-3">
                         {field.value.map((typeId, index) => {
                           const travelType = travelTypeOptions.find(
-                            (t) => t._id === typeId
+                            (t) => t._id === typeId,
                           );
                           return (
                             <Badge
@@ -420,7 +420,7 @@ export default function EditTravelPlanModal({
                               <button
                                 onClick={() =>
                                   field.onChange(
-                                    field.value.filter((_, i) => i !== index)
+                                    field.value.filter((_, i) => i !== index),
                                   )
                                 }
                                 className="ml-2 hover:underline"

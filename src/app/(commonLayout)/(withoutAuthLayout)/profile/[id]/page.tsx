@@ -1,7 +1,7 @@
 import { getProfileByUserId } from "@/actions/profile/getProfileByUserId";
 import ProfileDisplay from "../../../../../components/modules/Profile/ProfileDisplay";
-import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import { Metadata } from "next";
+import { getAllTravelTypeUsers } from "../../../../../actions/travelType/getAllTravelTypeUsers";
 
 export const metadata: Metadata = {
   title: `Profile Details || Travel Buddy`,
@@ -16,7 +16,7 @@ const ProfileDetailsPage = async ({
 }) => {
   const { id } = await params;
   const profile = await getProfileByUserId(id);
-  const travelTypes = await getAllTravelType();
+  const travelTypes = await getAllTravelTypeUsers();
 
   if (!profile) {
     return (
