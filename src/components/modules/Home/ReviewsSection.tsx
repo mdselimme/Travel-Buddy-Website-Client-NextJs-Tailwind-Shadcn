@@ -106,10 +106,7 @@ const ReviewsSection = async () => {
             {allReviews.length > 3 && (
               <div className="text-center">
                 <Link href="/reviews">
-                  <Button
-                    size="lg"
-                    className="bg-blue-600 hover:bg-blue-700 text-white px-8"
-                  >
+                  <Button size="lg" className="px-8 cursor-pointer text-white">
                     View All Reviews ({allReviews.length})
                   </Button>
                 </Link>

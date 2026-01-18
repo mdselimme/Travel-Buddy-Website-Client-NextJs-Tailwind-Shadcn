@@ -8,8 +8,16 @@ export const metadata: Metadata = {
   description: "Travel Buddy Manage Users Page to manage user roles.",
 };
 
-const ManageUser = async () => {
-  const allUsers = await getAllUser({ limit: 10, page: 1 });
+const ManageUser = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const { limit, page } = await searchParams;
+  const allUsers = await getAllUser({
+    limit: Number(limit),
+    page: Number(page),
+  });
 
   return (
     <div>
@@ -22,7 +30,10 @@ const ManageUser = async () => {
 
       {/* Users Table */}
       <div className="mt-10">
-        <ManageUsersTable initialUsers={allUsers.data} />
+        <ManageUsersTable
+          initialUsers={allUsers.data}
+          pagination={allUsers.pagination}
+        />
       </div>
     </div>
   );

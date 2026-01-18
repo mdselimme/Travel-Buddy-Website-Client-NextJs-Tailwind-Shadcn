@@ -1,5 +1,6 @@
 import { getAllTravelPlans } from "@/actions/TravelPlan/getAllTravelPlans";
 import ManageTravelPlansTable from "@/components/modules/TravelPlan/ManageTravelPlansTable";
+import { IPaginationProps } from "@/types/pagination.types";
 import { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
@@ -8,8 +9,16 @@ export const metadata: Metadata = {
   description: "Travel Buddy Manage Plans Page to manage travel plans.",
 };
 
-const ManagePlanPage = async () => {
-  const { data: allTravelPlans } = await getAllTravelPlans();
+const ManagePlanPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const { limit, page } = await searchParams;
+  const { data: allTravelPlans, pagination } = await getAllTravelPlans({
+    limit: Number(limit),
+    page: Number(page),
+  });
 
   return (
     <div>
@@ -22,7 +31,10 @@ const ManagePlanPage = async () => {
 
       {/* Travel Plans Table */}
       <div className="mt-10">
-        <ManageTravelPlansTable travelPlans={allTravelPlans} />
+        <ManageTravelPlansTable
+          travelPlans={allTravelPlans}
+          pagination={pagination as IPaginationProps}
+        />
       </div>
     </div>
   );

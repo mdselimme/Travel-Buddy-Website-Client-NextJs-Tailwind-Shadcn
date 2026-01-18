@@ -33,6 +33,8 @@ import Link from "next/link";
 import { ActiveStatus } from "@/types/user.types";
 import { UserRole } from "@/types/auth.types";
 import { deleteUserAction } from "@/actions/user/deleteUser";
+import PaginationBox from "@/components/Shared/PagintationBox";
+import { IPaginationProps } from "@/types/pagination.types";
 
 interface UserProfile {
   _id?: string;
@@ -55,6 +57,7 @@ interface User {
 
 interface ManageUsersTableProps {
   initialUsers: User[];
+  pagination: IPaginationProps;
 }
 
 const getRoleBadge = (role: string) => {
@@ -81,6 +84,7 @@ const getStatusBadge = (isActive: string, isVerified: boolean) => {
 
 export default function ManageUsersTable({
   initialUsers,
+  pagination,
 }: ManageUsersTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -108,11 +112,7 @@ export default function ManageUsersTable({
     setEditModalOpen(true);
   };
 
-  const handleEditSubmit = async (formData: {
-    fullName: string;
-    role: string;
-    isActive: string;
-  }) => {
+  const handleEditSubmit = async () => {
     if (!editingUser) return;
     setIsUpdating(true);
     try {
@@ -240,6 +240,10 @@ export default function ManageUsersTable({
           </TableBody>
         </Table>
       </div>
+      <PaginationBox
+        totalPages={pagination.pages}
+        currentPage={pagination.page}
+      />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog

@@ -31,9 +31,12 @@ import { Eye, Trash2, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { deleteTravelPlanAction } from "@/actions/TravelPlan/deleteTravelPlan";
 import { toast } from "sonner";
+import PaginationBox from "@/components/Shared/PagintationBox";
+import { IPaginationProps } from "@/types/pagination.types";
 
 interface ManageTravelPlansTableProps {
   travelPlans: ITravelPlan[];
+  pagination: IPaginationProps;
 }
 
 const formatDate = (date: Date | string | undefined) => {
@@ -71,6 +74,7 @@ const getStatusBadge = (status: TravelPlanStatus) => {
 
 export default function ManageTravelPlansTable({
   travelPlans,
+  pagination,
 }: ManageTravelPlansTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -157,6 +161,10 @@ export default function ManageTravelPlansTable({
           </TableBody>
         </Table>
       </div>
+      <PaginationBox
+        currentPage={pagination.page}
+        totalPages={pagination.pages}
+      />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog

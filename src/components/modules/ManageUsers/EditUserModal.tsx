@@ -103,7 +103,7 @@ export default function EditUserModal({
       onOpenChange(false);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to update user status"
+        error instanceof Error ? error.message : "Failed to update user status",
       );
     }
   };
