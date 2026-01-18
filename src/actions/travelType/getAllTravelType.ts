@@ -6,8 +6,13 @@ import { serverFetch } from "@/lib/serverFetch";
 
 export const getAllTravelType = async ({ limit, page }: { limit: number; page: number }) => {
     try {
-        const query = `?limit=${limit}&page=${page}`;
-        const response = await serverFetch.get(`/travel-type${query}`, {
+        const params = new URLSearchParams();
+        if (limit) params.append("limit", limit.toString());
+        if (page) params.append("page", page.toString());
+
+        const queryString = params.toString();
+        const url = queryString ? `/travel-type?${queryString}` : `/travel-type`;
+        const response = await serverFetch.get(url, {
             next: {
                 tags: ["TRAVEL-TYPES"]
             }

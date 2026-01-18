@@ -14,7 +14,9 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const ReviewsSection = async () => {
-  const { data: allReviews } = (await getAllReviews()) as { data: IMyReview[] };
+  const { data: allReviews } = (await getAllReviews({ limit: "3" })) as {
+    data: IMyReview[];
+  };
 
   const displayedReviews = allReviews?.slice(0, 3) || [];
 
@@ -107,7 +109,7 @@ const ReviewsSection = async () => {
               <div className="text-center">
                 <Link href="/reviews">
                   <Button size="lg" className="px-8 cursor-pointer text-white">
-                    View All Reviews ({allReviews.length})
+                    View All Reviews
                   </Button>
                 </Link>
               </div>

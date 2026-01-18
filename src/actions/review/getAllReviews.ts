@@ -3,9 +3,15 @@
 import { serverFetch } from "@/lib/serverFetch";
 
 
-export const getAllReviews = async () => {
+export const getAllReviews = async ({ page, limit }: { page?: string, limit?: string }) => {
     try {
-        const response = await serverFetch.get("/review", {
+
+        const params = new URLSearchParams();
+        if (limit) params.append("limit", limit.toString());
+        if (page) params.append("page", page.toString());
+        const queryString = params.toString();
+        const url = queryString ? `/review?${queryString}` : `/review`;
+        const response = await serverFetch.get(url, {
             next: {
                 tags: ["all-reviews"]
             },
@@ -14,7 +20,7 @@ export const getAllReviews = async () => {
         if (!response.ok || !data.success) {
             throw new Error(data.message || "Failed to fetch reviews.");
         }
-        return data?.data;
+        return data.data;
     } catch (error) {
         throw new Error(error instanceof Error ? error.message : "Error fetching reviews.");
     }
