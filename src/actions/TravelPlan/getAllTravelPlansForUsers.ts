@@ -2,13 +2,15 @@
 import { serverFetch } from "@/lib/serverFetch";
 
 
-export const getAllTravelPlansForUsers = async ({ search, startDate, travelType }: { search?: string, startDate?: string, travelType?: string } = {}) => {
+export const getAllTravelPlansForUsers = async ({ search, startDate, travelType, limit, page }: { search?: string, startDate?: string, travelType?: string, limit?: number, page?: number } = {}) => {
     try {
         // Build query string only if params have values
         const params = new URLSearchParams();
         if (search) params.append("search", search);
         if (startDate) params.append("startDate", startDate);
         if (travelType) params.append("travelType", travelType);
+        if (limit) params.append("limit", limit.toString());
+        if (page) params.append("page", page.toString());
 
         const queryString = params.toString();
         const url = queryString ? `/travel-plan/user-plans?${queryString}` : `/travel-plan/user-plans`;

@@ -4,12 +4,11 @@
 import { serverFetch } from "@/lib/serverFetch";
 
 
-export const getAllTravelType = async ({ limit, page }: { limit: number; page: number }) => {
+export const getAllTravelTypeUsers = async () => {
     try {
-        const query = `?limit=${limit}&page=${page}`;
-        const response = await serverFetch.get(`/travel-type${query}`, {
+        const response = await serverFetch.get(`/travel-type/users`, {
             next: {
-                tags: ["TRAVEL-TYPES"]
+                tags: ["TRAVEL-TYPES-USERS"]
             }
         });
         const data = await response.json();

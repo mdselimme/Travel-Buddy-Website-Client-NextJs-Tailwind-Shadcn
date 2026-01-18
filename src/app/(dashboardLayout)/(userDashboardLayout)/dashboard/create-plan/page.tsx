@@ -1,7 +1,7 @@
-import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
 import { getUserInfo } from "@/actions/user/getUserInfo";
 import CreateNewPlanForm from "@/components/modules/TravelPlan/CreateNewPlanForm";
 import { Metadata } from "next";
+import { getAllTravelTypeUsers } from "../../../../../actions/travelType/getAllTravelTypeUsers";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 const CreateANewPlanPage = async () => {
-  const { data: allTravelTypes } = await getAllTravelType();
+  const allTravelTypes = await getAllTravelTypeUsers();
   const user = await getUserInfo();
 
   return (

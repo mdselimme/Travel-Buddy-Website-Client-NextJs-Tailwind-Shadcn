@@ -25,14 +25,18 @@ import EditTravelTypeModal from "./EditTravelTypeModal";
 import { ITravelType } from "@/types/travel.type";
 import { toast } from "sonner";
 import { deleteTravelTypeAction } from "@/actions/travelType/deleteTravelType";
+import { IPaginationProps } from "@/types/pagination.types";
+import PaginationBox from "@/components/Shared/PagintationBox";
 
 interface TravelTypesListProps {
   initialTravelTypes: ITravelType[];
+  pagination: IPaginationProps;
   onRefresh?: () => void;
 }
 
 const TravelTypesList = ({
   initialTravelTypes,
+  pagination,
   onRefresh,
 }: TravelTypesListProps) => {
   const [editingType, setEditingType] = useState<ITravelType | null>(null);
@@ -52,7 +56,7 @@ const TravelTypesList = ({
       toast.error(
         error instanceof Error
           ? error.message
-          : "An unexpected error occurred. Please try again."
+          : "An unexpected error occurred. Please try again.",
       );
     } finally {
       setIsDeleting(false);
@@ -111,6 +115,10 @@ const TravelTypesList = ({
             ))}
           </TableBody>
         </Table>
+        <PaginationBox
+          currentPage={pagination.page}
+          totalPages={pagination.pages}
+        />
       </Card>
 
       {/* Edit Modal */}

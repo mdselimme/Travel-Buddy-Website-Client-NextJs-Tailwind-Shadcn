@@ -1,5 +1,5 @@
 import { getAllTravelPlansForUsers } from "@/actions/TravelPlan/getAllTravelPlansForUsers";
-import { getAllTravelType } from "@/actions/travelType/getAllTravelType";
+import { getAllTravelTypeUsers } from "@/actions/travelType/getAllTravelTypeUsers";
 import {
   ExploreHero,
   ExploreFilter,
@@ -19,13 +19,15 @@ const ExplorePage = async ({
 }) => {
   const resolvedSearchParams = await searchParams;
 
-  const { search, startDate, travelType } = resolvedSearchParams;
-  const { data: allTravelPlans } = await getAllTravelPlansForUsers({
+  const { search, startDate, travelType, limit, page } = resolvedSearchParams;
+  const { data: allTravelPlans, pagination } = await getAllTravelPlansForUsers({
     search: Array.isArray(search) ? search[0] : search,
     startDate: Array.isArray(startDate) ? startDate[0] : startDate,
     travelType: Array.isArray(travelType) ? travelType[0] : travelType,
+    limit: Number(limit),
+    page: Number(page),
   });
-  const { data: travelTypes } = await getAllTravelType();
+  const travelTypes = await getAllTravelTypeUsers();
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -33,7 +35,7 @@ const ExplorePage = async ({
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         <ExploreFilter travelTypes={travelTypes} />
-        <TravelPlansGrid plans={allTravelPlans} />
+        <TravelPlansGrid plans={allTravelPlans} pagination={pagination} />
       </div>
     </div>
   );

@@ -11,8 +11,16 @@ export const metadata: Metadata = {
     "Travel Buddy Travel Types Management Page to manage travel types.",
 };
 
-const TravelTypesManagementPage = async () => {
-  const { data: allTravelTypes } = await getAllTravelType();
+const TravelTypesManagementPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const { limit, page } = await searchParams;
+  const { data: allTravelTypes, pagination } = await getAllTravelType({
+    limit: Number(limit),
+    page: Number(page),
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -45,7 +53,10 @@ const TravelTypesManagementPage = async () => {
             </div>
           </Card>
         ) : (
-          <TravelTypesList initialTravelTypes={allTravelTypes} />
+          <TravelTypesList
+            initialTravelTypes={allTravelTypes}
+            pagination={pagination}
+          />
         )}
       </div>
     </div>
