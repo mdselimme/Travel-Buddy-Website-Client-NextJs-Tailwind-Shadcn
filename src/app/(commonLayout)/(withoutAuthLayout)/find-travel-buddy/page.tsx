@@ -2,6 +2,7 @@ import { getAllProfiles } from "@/actions/profile/getAllProfiles";
 import { ITravelBuddyProfile } from "@/types/travelBuddy.types";
 import TravelBuddyCard from "@/components/modules/FindTravelBuddy/TravelBuddyCard";
 import { Metadata } from "next";
+import PaginationBox from "@/components/Shared/PagintationBox";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -10,8 +11,17 @@ export const metadata: Metadata = {
     "Travel Buddy Find Travel Buddy Page to connect with fellow travelers.",
 };
 
-const FindTravelBuddy = async () => {
-  const allProfiles = (await getAllProfiles()) as ITravelBuddyProfile[];
+const FindTravelBuddy = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const { page, limit } = await searchParams;
+
+  const { data: allProfiles, pagination } = await getAllProfiles({
+    page: Number(page),
+    limit: Number(limit),
+  });
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -34,7 +44,7 @@ const FindTravelBuddy = async () => {
       {/* Profiles Grid */}
       {allProfiles && allProfiles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {allProfiles.map((profile) => (
+          {allProfiles.map((profile: ITravelBuddyProfile) => (
             <TravelBuddyCard key={profile._id} profile={profile} />
           ))}
         </div>
@@ -46,6 +56,12 @@ const FindTravelBuddy = async () => {
           </p>
         </div>
       )}
+      <div>
+        <PaginationBox
+          currentPage={pagination.currentPage}
+          totalPages={pagination.totalPages}
+        />
+      </div>
     </div>
   );
 };

@@ -4,14 +4,19 @@
 import { serverFetch } from "@/lib/serverFetch";
 
 interface IQueryOptions {
-    limit: number;
-    page: number;
+    limit?: number;
+    page?: number;
 }
 
 export const getAllUser = async (query: IQueryOptions) => {
 
     try {
-        const response = await serverFetch.get(`/user?limit=${query.limit}&page=${query.page}`, {
+        const params = new URLSearchParams();
+        if (query.limit) params.set("limit", query.limit.toString());
+        if (query.page) params.set("page", query.page.toString());
+        const paramsUrl = params.toString();
+        const url = paramsUrl ? `/user?${paramsUrl}` : `/user`;
+        const response = await serverFetch.get(url, {
             next: { tags: ["users"] }
         });
 
