@@ -1,7 +1,7 @@
 import { getStats } from "@/actions/stats/getStats";
 import AdminStatsDisplay from "@/components/modules/Dashboard/AdminStatsDisplay";
 import { Metadata } from "next";
-
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `Admin Dashboard Home || Travel Buddy`,
   description:

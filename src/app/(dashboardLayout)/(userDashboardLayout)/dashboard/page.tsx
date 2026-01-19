@@ -1,7 +1,7 @@
 import { getStats } from "@/actions/stats/getStats";
 import UserDashboardData from "@/components/modules/Dashboard/UserDashboardData";
 import { Metadata } from "next";
-
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: `User Dashboard Home || Travel Buddy`,
   description:
