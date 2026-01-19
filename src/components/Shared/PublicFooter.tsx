@@ -190,7 +190,7 @@ export default function PublicFooter() {
 
       {/* Bottom Footer */}
       <div className="border-t px-4 py-6 bg-secondary/50">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-muted-foreground text-sm gap-4">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center text-muted-foreground text-sm gap-4">
           <p>
             &copy; {new Date().getFullYear()} Travel Buddy. All rights reserved.
           </p>
