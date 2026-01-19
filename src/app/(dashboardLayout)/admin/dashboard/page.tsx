@@ -8,8 +8,9 @@ export const metadata: Metadata = {
     "Travel Buddy Admin Dashboard Home Page to view platform statistics.",
 };
 
-const DashboardPage = async () => {
+const AdminDashboardPage = async () => {
   const stats = await getStats();
+  console.log({ stats });
 
   if (!stats || !stats.data) {
     return (
@@ -27,16 +28,10 @@ const DashboardPage = async () => {
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto">
-        <AdminStatsDisplay
-          totalTravelPlans={stats.data.totalTravelPlans}
-          totalUsers={stats.data.totalUsers}
-          totalAdmins={stats.data.totalAdmins}
-          totalRegularUsers={stats.data.totalRegularUsers}
-          totalSubscribedUsers={stats.data.totalSubscribedUsers}
-        />
+        <AdminStatsDisplay data={stats.data} />
       </div>
     </div>
   );
 };
 
-export default DashboardPage;
+export default AdminDashboardPage;

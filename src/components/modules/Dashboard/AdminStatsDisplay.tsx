@@ -1,270 +1,356 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  MapPin,
-  Users,
-  UserCheck,
-  UserCog,
-  CreditCard,
-  TrendingUp,
-} from "lucide-react";
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { MapPin, Users, DollarSign, Activity, Plane } from "lucide-react";
+import { IAdminStats } from "@/types/stats.types";
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import Image from "next/image";
 
 interface AdminStatsDisplayProps {
-  totalTravelPlans: number;
-  totalUsers: number;
-  totalAdmins: number;
-  totalRegularUsers: number;
-  totalSubscribedUsers: number;
+  data: IAdminStats;
 }
 
-export default function AdminStatsDisplay({
-  totalTravelPlans,
-  totalUsers,
-  totalAdmins,
-  totalRegularUsers,
-  totalSubscribedUsers,
-}: AdminStatsDisplayProps) {
-  const stats = [
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884d8"];
+
+export default function AdminStatsDisplay({ data }: AdminStatsDisplayProps) {
+  const {
+    overview,
+    userGrowth,
+    travelPlansByStatus,
+    revenueGrowth,
+    topDestinations,
+    mostActiveUsers,
+  } = data;
+
+  const statsCards = [
     {
-      title: "Total Travel Plans",
-      value: totalTravelPlans,
-      icon: MapPin,
-      bgColor: "bg-blue-50",
-      borderColor: "border-blue-200",
-      iconColor: "text-blue-600",
-      trend: `${totalTravelPlans} plans created`,
-    },
-    {
-      title: "Total Users",
-      value: totalUsers,
-      icon: Users,
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-200",
-      iconColor: "text-purple-600",
-      trend: `${totalUsers} registered users`,
-    },
-    {
-      title: "Admin Users",
-      value: totalAdmins,
-      icon: UserCog,
-      bgColor: "bg-red-50",
-      borderColor: "border-red-200",
-      iconColor: "text-red-600",
-      trend: `${totalAdmins} administrators`,
-    },
-    {
-      title: "Regular Users",
-      value: totalRegularUsers,
-      icon: UserCheck,
+      title: "Total Revenue",
+      value: `$${overview.totalRevenue}`,
+      icon: DollarSign,
       bgColor: "bg-green-50",
       borderColor: "border-green-200",
       iconColor: "text-green-600",
-      trend: `${totalRegularUsers} regular members`,
+      trend: `${overview.pendingPaymentCount} pending payments`,
     },
     {
-      title: "Subscribed Users",
-      value: totalSubscribedUsers,
-      icon: CreditCard,
+      title: "Total Users",
+      value: overview.totalUsers,
+      icon: Users,
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+      iconColor: "text-blue-600",
+      trend: `${overview.totalRegularUsers} regular, ${overview.totalSubscribedUsers} premium`,
+    },
+    {
+      title: "Active Travel Plans",
+      value: overview.totalTravelPlans,
+      icon: MapPin,
       bgColor: "bg-amber-50",
       borderColor: "border-amber-200",
       iconColor: "text-amber-600",
-      trend: `${totalSubscribedUsers} premium members`,
+      trend: `${overview.totalMatches} matches found`,
+    },
+    {
+      title: "Engagement",
+      value: overview.totalReviews,
+      icon: Activity,
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
+      iconColor: "text-purple-600",
+      trend: "Total platform reviews",
     },
   ];
 
-  const subscriptionRate =
-    totalUsers > 0
-      ? ((totalSubscribedUsers / totalUsers) * 100).toFixed(1)
-      : "0";
-
   return (
-    <div className="w-full">
+    <div className="w-full space-y-6">
       {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-foreground mb-2">Dashboard</h1>
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Dashboard Overview
+        </h1>
         <p className="text-muted-foreground">
-          Overview of your platform statistics and metrics
+          Welcome back! Here&apos;s what&apos;s happening with your platform
+          today.
         </p>
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-        {stats.map((stat, index) => {
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {statsCards.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <Card
               key={index}
-              className={`${stat.bgColor} border ${stat.borderColor} hover:shadow-lg transition-shadow`}
+              className={`${stat.bgColor} border ${stat.borderColor} shadow-sm hover:shadow-md transition-shadow`}
             >
-              <CardHeader className="flex flex-row items-center justify-between pb-3">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">
                   {stat.title}
                 </CardTitle>
-                <Icon className={`w-5 h-5 ${stat.iconColor}`} />
+                <Icon className={`h-4 w-4 ${stat.iconColor}`} />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-foreground mb-2">
-                  {stat.value.toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground">{stat.trend}</p>
+                <div className="text-2xl font-bold">{stat.value}</div>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {stat.trend}
+                </p>
               </CardContent>
             </Card>
           );
         })}
       </div>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* User Breakdown */}
-        <Card className="border-2">
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* User Growth Chart */}
+        <Card className="col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-purple-600" />
-              User Breakdown
-            </CardTitle>
+            <CardTitle>User Growth</CardTitle>
+            <CardDescription>
+              New user registrations over the last 6 months
+            </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Regular Users</span>
-              <div className="flex items-center gap-2">
-                <div className="text-2xl font-bold text-green-600">
-                  {totalRegularUsers}
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  (
-                  {totalUsers > 0
-                    ? ((totalRegularUsers / totalUsers) * 100).toFixed(1)
-                    : "0"}
-                  %)
-                </span>
-              </div>
-            </div>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-green-500"
-                style={{
-                  width: `${
-                    totalUsers > 0
-                      ? (totalRegularUsers / totalUsers) * 100
-                      : 0
-                  }%`,
-                }}
-              ></div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-muted-foreground">Admin Users</span>
-              <div className="flex items-center gap-2">
-                <div className="text-2xl font-bold text-red-600">
-                  {totalAdmins}
-                </div>
-                <span className="text-sm text-muted-foreground">
-                  (
-                  {totalUsers > 0
-                    ? ((totalAdmins / totalUsers) * 100).toFixed(1)
-                    : "0"}
-                  %)
-                </span>
-              </div>
-            </div>
-            <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-red-500"
-                style={{
-                  width: `${
-                    totalUsers > 0 ? (totalAdmins / totalUsers) * 100 : 0
-                  }%`,
-                }}
-              ></div>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={userGrowth}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    className="stroke-muted"
+                  />
+                  <XAxis
+                    dataKey="month"
+                    className="text-xs"
+                    tick={{ fill: "currentColor" }}
+                  />
+                  <YAxis className="text-xs" tick={{ fill: "currentColor" }} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="count"
+                    stroke="#3b82f6"
+                    fillOpacity={1}
+                    fill="url(#colorUsers)"
+                    name="Users"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
 
-        {/* Subscription Analytics */}
-        <Card className="border-2">
+        {/* Revenue Growth Chart */}
+        <Card className="col-span-1">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-amber-600" />
-              Subscription Analytics
-            </CardTitle>
+            <CardTitle>Revenue Revenue</CardTitle>
+            <CardDescription>Monthly revenue breakdown</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-muted-foreground">Subscription Rate</span>
-              <div className="text-3xl font-bold text-amber-600">
-                {subscriptionRate}%
-              </div>
-            </div>
-            <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-amber-500"
-                style={{
-                  width: `${
-                    totalUsers > 0
-                      ? (totalSubscribedUsers / totalUsers) * 100
-                      : 0
-                  }%`,
-                }}
-              ></div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
-                <p className="text-sm text-muted-foreground mb-1">
-                  Premium Members
-                </p>
-                <p className="text-2xl font-bold text-amber-600">
-                  {totalSubscribedUsers}
-                </p>
-              </div>
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200">
-                <p className="text-sm text-muted-foreground mb-1">
-                  Free Members
-                </p>
-                <p className="text-2xl font-bold text-slate-600">
-                  {totalUsers - totalSubscribedUsers}
-                </p>
-              </div>
+          <CardContent>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart
+                  data={revenueGrowth}
+                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    className="stroke-muted"
+                  />
+                  <XAxis
+                    dataKey="month"
+                    className="text-xs"
+                    tick={{ fill: "currentColor" }}
+                  />
+                  <YAxis className="text-xs" tick={{ fill: "currentColor" }} />
+                  <Tooltip
+                    cursor={{ fill: "transparent" }}
+                    contentStyle={{
+                      backgroundColor: "rgba(255, 255, 255, 0.9)",
+                      borderRadius: "8px",
+                      border: "none",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                  />
+                  <Bar
+                    dataKey="amount"
+                    name="Revenue"
+                    fill="#10b981"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Activity Summary */}
-      <Card className="mt-6 border-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Travel Plan Status Distribution */}
+        <Card className="col-span-1">
+          <CardHeader>
+            <CardTitle>Plan Status</CardTitle>
+            <CardDescription>Distribution of travel plans</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px] flex items-center justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={travelPlansByStatus}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={60}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="count"
+                    nameKey="status"
+                  >
+                    {travelPlansByStatus.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend verticalAlign="bottom" height={36} />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top Destinations */}
+        <Card className="col-span-1 lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Top Destinations</CardTitle>
+            <CardDescription>Most popular travel locations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {topDestinations.map((dest, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between p-3 bg-muted/40 rounded-lg hover:bg-muted/60 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 min-w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm text-foreground">
+                        {dest.city}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {dest.country}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="font-bold text-lg">{dest.count}</span>
+                    <span className="text-xs text-muted-foreground">
+                      visits
+                    </span>
+                  </div>
+                </div>
+              ))}
+              {topDestinations.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground text-sm">
+                  No destination data available
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Most Active Users Table */}
+      <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-blue-600" />
-            Platform Summary
-          </CardTitle>
+          <CardTitle>Most Active Users</CardTitle>
+          <CardDescription>
+            Users with high engagement and travel plans
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <p className="text-sm text-muted-foreground mb-2">
-                Average Plans per User
-              </p>
-              <p className="text-3xl font-bold text-blue-600">
-                {totalUsers > 0 ? (totalTravelPlans / totalUsers).toFixed(1) : 0}
-              </p>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-              <p className="text-sm text-muted-foreground mb-2">
-                Admin to User Ratio
-              </p>
-              <p className="text-3xl font-bold text-purple-600">
-                1:{totalUsers > 0 ? (totalUsers / totalAdmins).toFixed(0) : 0}
-              </p>
-            </div>
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <p className="text-sm text-muted-foreground mb-2">
-                Free to Premium Ratio
-              </p>
-              <p className="text-3xl font-bold text-green-600">
-                1:{totalSubscribedUsers > 0 ? ((totalUsers - totalSubscribedUsers) / totalSubscribedUsers).toFixed(1) : 0}
-              </p>
-            </div>
+          <div className="space-y-4">
+            {mostActiveUsers.slice(0, 5).map((user) => (
+              <div
+                key={user.userId}
+                className="flex items-center justify-between border-b last:border-0 pb-4 last:pb-0"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-gray-200 overflow-hidden relative">
+                    {user.profileImage ? (
+                      <Image
+                        src={user.profileImage}
+                        alt={user.fullName}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-primary text-primary-foreground font-semibold">
+                        {user.fullName?.charAt(0) || "U"}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="font-medium">{user.fullName}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {user.userId}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold flex items-center justify-end gap-1">
+                    <Plane className="w-3 h-3 text-primary" />
+                    {user.travelPlanCount}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Travel Plans</p>
+                </div>
+              </div>
+            ))}
+            {mostActiveUsers.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground text-sm">
+                No active user data available
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
