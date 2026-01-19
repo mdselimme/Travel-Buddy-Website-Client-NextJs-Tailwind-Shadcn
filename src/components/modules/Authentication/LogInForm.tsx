@@ -133,6 +133,32 @@ export function LoginForm({
             >
               Forgot your password?
             </Link>
+
+            <div className="grid grid-cols-2 gap-4">
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full rounded-full cursor-pointer"
+                onClick={() => {
+                  form.setValue("email", "mdselimdev@gmail.com");
+                  form.setValue("password", "Ss@12345");
+                }}
+              >
+                Demo User
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full rounded-full cursor-pointer"
+                onClick={() => {
+                  form.setValue("email", "contact.mdselim.dev@gmail.com");
+                  form.setValue("password", "Ss@12345");
+                }}
+              >
+                Demo Admin
+              </Button>
+            </div>
+
             <Button
               type="submit"
               className="w-full text-white rounded-full cursor-pointer"
