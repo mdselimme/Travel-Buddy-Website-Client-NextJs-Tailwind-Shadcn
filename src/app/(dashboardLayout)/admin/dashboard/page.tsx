@@ -10,7 +10,6 @@ export const metadata: Metadata = {
 
 const AdminDashboardPage = async () => {
   const stats = await getStats();
-  console.log({ stats });
 
   if (!stats || !stats.data) {
     return (
